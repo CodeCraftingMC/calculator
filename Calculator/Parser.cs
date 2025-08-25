@@ -28,9 +28,26 @@ namespace Calculator
         {
             NUMBER,
             OPERATOR,
-            PARENTHESES,
+            BRACKET,
             SPECIALFUNC
         }
+
+        Dictionary<string, Func<decimal, decimal>> specialFunctionMap = new()
+        {
+            { "sin", SpecialFunctions.Sin },
+            { "cos", SpecialFunctions.Cos },
+            { "tan", SpecialFunctions.Tan },
+            { "cot", SpecialFunctions.Cot },
+            { "sec", SpecialFunctions.Sec },
+            { "csc", SpecialFunctions.Csc },
+
+            { "sin", SpecialFunctions.Sin },
+            { "cos", SpecialFunctions.Cos },
+            { "tan", SpecialFunctions.Tan },
+            { "cot", SpecialFunctions.Cot },
+            { "sec", SpecialFunctions.Sec },
+            { "csc", SpecialFunctions.Csc },
+        };
 
         private ComponentType GetCharType(char c)
         {
@@ -44,7 +61,7 @@ namespace Calculator
             }
             else if (parenthesesCharSet.Contains(c))
             {
-                return ComponentType.PARENTHESES;
+                return ComponentType.BRACKET;
             }
             return ComponentType.SPECIALFUNC;
         }
@@ -60,7 +77,7 @@ namespace Calculator
             {
                 components.Add(new OperatorComponent(selection));
             }
-            else if (type == ComponentType.PARENTHESES)
+            else if (type == ComponentType.BRACKET)
             {
                 components.Add(new BracketComponent(selection));
             }
@@ -163,7 +180,7 @@ namespace Calculator
                 char c = expression[i];
                 ComponentType cCharType = GetCharType(c);
             
-                if (cCharType != previousCharType || (cCharType == ComponentType.PARENTHESES && i != 0))
+                if (cCharType != previousCharType || (cCharType == ComponentType.BRACKET && i != 0))
                 {
 
                     AddCurrentSelection(selection, previousCharType, ref components);
@@ -288,12 +305,8 @@ namespace Calculator
 
         public DecimalComponent EvaluateSpecialFunc(SpecialFunctionComponent spc, DecimalComponent n)
         {
-            if (spc.specialFunction == "sin")
-            {
-                decimal result = (decimal)Math.Sin((double)n.n);
-                return new DecimalComponent(result);
-            }
-            throw new NotImplementedException();
+
+            return new DecimalComponent(specialFunctionMap[spc.specialFunction](n.n));
         }
 
         public void EvaluateSpecialFuncs(ref List<Component> components)
@@ -462,7 +475,10 @@ namespace Calculator
 
             Console.WriteLine();
 
-            EvaluateParsed(components);
+            DecimalComponent result = EvaluateParsed(components);
+
+            Console.WriteLine("Result: ");
+            Console.WriteLine(result.n);
 
 
             return 0;
