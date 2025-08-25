@@ -38,15 +38,15 @@ namespace Calculator
 
         public static decimal Arcsin(decimal x)
         {
-            return 1 / (decimal)Math.Asin((double)x);
+            return (decimal)Math.Asin((double)x);
         }
         public static decimal Arccos(decimal x)
         {
-            return 1 / (decimal)Math.Acos((double)x);
+            return (decimal)Math.Acos((double)x);
         }
         public static decimal Arctan(decimal x)
         {
-            return 1 / (decimal)Math.Atan((double)x);
+            return (decimal)Math.Atan((double)x);
         }
         public static decimal Arccot(decimal x)
         {
@@ -60,5 +60,33 @@ namespace Calculator
         {
             return (decimal)Math.Asin((double)(1 / x));
         }
+
+
+
+        public static decimal Sinh(decimal x)
+        {
+            return (decimal)Math.Sinh((double)x);
+        }
+        public static decimal Cosh(decimal x)
+        {
+            return (decimal)Math.Cosh((double)x);
+        }
+        public static decimal Tanh(decimal x)
+        {
+            return (decimal)Math.Tanh((double)x);
+        }
+        public static decimal Csch(decimal x)
+        {
+            return 1 / (decimal)Math.Sinh((double)x);
+        }
+        public static decimal Sech(decimal x)
+        {
+            return 1 / (decimal)Math.Cosh((double)x);
+        }
+        public static decimal Coth(decimal x)
+        {
+            return (decimal)Math.Cosh((double)x) / (decimal)Math.Sinh((double)x);
+        }
+
     }
 }
