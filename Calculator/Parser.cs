@@ -39,6 +39,11 @@ namespace Calculator
         {
             specialFunctionMap = new()
             {
+                {"fact", SpecialFunctions.Factorial},
+                {"abs", SpecialFunctions.Abs},
+                {"sqrt", SpecialFunctions.Sqrt},
+                { "ans", (dec) => SpecialFunctions.Ans(dec, history) },
+
                 { "sin", SpecialFunctions.Sin },
                 { "cos", SpecialFunctions.Cos },
                 { "tan", SpecialFunctions.Tan },
@@ -66,8 +71,6 @@ namespace Calculator
                 { "arccoth", SpecialFunctions.Arccoth },
                 { "arcsech", SpecialFunctions.Arcsech },
                 { "arccsch", SpecialFunctions.Arccsch },
-
-                { "ans", (dec) => SpecialFunctions.Ans(dec, history) },
             };
         }
 
