@@ -10,12 +10,12 @@ namespace Calculator
         {
             Parser p = new Parser();
         
-            p.Evaluate("arcsin(1) + arccos(1) + arctan(2) + arccot(2) + arcsec(2) + arccsc(1)");
+            p.Evaluate("arcsinh(1) + arccosh(1) + arctanh(0.1) + arccoth(1.5) + arcsech(1) + arccsch(0.1)");
             //p.Evaluate("(1 + 1) * (0.5 + 0.5) + (0.5 - 0.5) * 2 * (1 / 3)");
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            //Application.Run(new CalculatorWindow());
+            Application.Run(new CalculatorWindow());
         }
     }
 }

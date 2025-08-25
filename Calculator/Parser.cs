@@ -25,7 +25,7 @@ namespace Calculator
         string[] operatorHierarchy = {}; // operator hierarchy
 
         List<decimal> history = new();
-        Dictionary<string, Func<decimal, decimal>> specialFunctionMap;
+        public Dictionary<string, Func<decimal, decimal>> specialFunctionMap;
 
         public enum ComponentType // component types
         {
@@ -54,11 +54,19 @@ namespace Calculator
                 { "arccsc", SpecialFunctions.Arccsc },
 
                 { "sinh", SpecialFunctions.Sinh },
-                { "Cosh", SpecialFunctions.Cosh },
-                { "Tanh", SpecialFunctions.Tanh },
-                { "Coth", SpecialFunctions.Coth },
-                { "Sech", SpecialFunctions.Sech },
-                { "Csch", SpecialFunctions.Csch },
+                { "cosh", SpecialFunctions.Cosh },
+                { "tanh", SpecialFunctions.Tanh },
+                { "coth", SpecialFunctions.Coth },
+                { "sech", SpecialFunctions.Sech },
+                { "csch", SpecialFunctions.Csch },
+
+                { "arcsinh", SpecialFunctions.Arcsinh },
+                { "arccosh", SpecialFunctions.Arccosh },
+                { "arctanh", SpecialFunctions.Arctanh },
+                { "arccoth", SpecialFunctions.Arccoth },
+                { "arcsech", SpecialFunctions.Arcsech },
+                { "arccsch", SpecialFunctions.Arccsch },
+
                 { "ans", (dec) => SpecialFunctions.Ans(dec, history) },
             };
         }
@@ -334,7 +342,6 @@ namespace Calculator
                     SpecialFunctionComponent? spc = c as SpecialFunctionComponent;
                     DecimalComponent? n = nc as DecimalComponent;
                     if (spc != null && n != null) {
-                        Console.WriteLine(spc.specialFunction);
                         DecimalComponent result = EvaluateSpecialFunc(spc, n);
                         components.RemoveAt(i);
                         components[i] = result;
