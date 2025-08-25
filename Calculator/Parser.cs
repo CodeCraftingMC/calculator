@@ -24,6 +24,9 @@ namespace Calculator
 
         string[] operatorHierarchy = {}; // operator hierarchy
 
+        List<decimal> history = new();
+        Dictionary<string, Func<decimal, decimal>> specialFunctionMap;
+
         public enum ComponentType // component types
         {
             NUMBER,
@@ -32,14 +35,16 @@ namespace Calculator
             SPECIALFUNC
         }
 
-        Dictionary<string, Func<decimal, decimal>> specialFunctionMap = new()
+        public Parser()
         {
-            { "sin", SpecialFunctions.Sin },
-            { "cos", SpecialFunctions.Cos },
-            { "tan", SpecialFunctions.Tan },
-            { "cot", SpecialFunctions.Cot },
-            { "sec", SpecialFunctions.Sec },
-            { "csc", SpecialFunctions.Csc },
+            specialFunctionMap = new()
+            {
+                { "sin", SpecialFunctions.Sin },
+                { "cos", SpecialFunctions.Cos },
+                { "tan", SpecialFunctions.Tan },
+                { "cot", SpecialFunctions.Cot },
+                { "sec", SpecialFunctions.Sec },
+                { "csc", SpecialFunctions.Csc },
 
             { "arcsin", SpecialFunctions.Arcsin },
             { "arccos", SpecialFunctions.Arccos },
@@ -53,7 +58,8 @@ namespace Calculator
             { "Tanh", SpecialFunctions.Tanh },
             { "Coth", SpecialFunctions.Coth },
             { "Sech", SpecialFunctions.Sech },
-            { "Csch", SpecialFunctions.Csch }
+            { "Csch", SpecialFunctions.Csch },
+            { "ans", (dec) => SpecialFunctions.Ans(dec, history) },
         };
 
         private ComponentType GetCharType(char c)
@@ -491,6 +497,11 @@ namespace Calculator
 
 
             return result.n;
+        }
+
+        public void AppendHistory(decimal dec)
+        {
+            history.Add(dec);
         }
     }
 }

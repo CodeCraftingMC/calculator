@@ -88,5 +88,11 @@ namespace Calculator
             return (decimal)Math.Cosh((double)x) / (decimal)Math.Sinh((double)x);
         }
 
+        public static decimal Ans(decimal index, List<decimal> answers)
+        {
+            if (index < 1 || index > answers.Count)
+                throw new ArgumentOutOfRangeException(nameof(index), "Index out of range of answers list");
+            return answers[^((int)index)];
+        }
     }
 }
