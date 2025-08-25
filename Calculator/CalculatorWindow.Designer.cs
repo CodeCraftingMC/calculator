@@ -31,12 +31,13 @@
             TBInput = new TextBox();
             TLPButtons = new TableLayoutPanel();
             LabelPreviousInput = new Label();
+            richTextBox1 = new RichTextBox();
             SuspendLayout();
             // 
             // TBInput
             // 
             TBInput.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TBInput.Location = new Point(12, 33);
+            TBInput.Location = new Point(12, 190);
             TBInput.Name = "TBInput";
             TBInput.Size = new Size(776, 35);
             TBInput.TabIndex = 0;
@@ -50,7 +51,7 @@
             TLPButtons.ColumnStyles.Add(new ColumnStyle());
             TLPButtons.ColumnStyles.Add(new ColumnStyle());
             TLPButtons.ColumnStyles.Add(new ColumnStyle());
-            TLPButtons.Location = new Point(12, 74);
+            TLPButtons.Location = new Point(12, 231);
             TLPButtons.Name = "TLPButtons";
             TLPButtons.RowCount = 4;
             TLPButtons.RowStyles.Add(new RowStyle());
@@ -69,11 +70,20 @@
             LabelPreviousInput.Size = new Size(0, 21);
             LabelPreviousInput.TabIndex = 2;
             // 
+            // richTextBox1
+            // 
+            richTextBox1.Location = new Point(12, 12);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.Size = new Size(776, 172);
+            richTextBox1.TabIndex = 3;
+            richTextBox1.Text = "";
+            // 
             // CalculatorWindow
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(800, 607);
+            Controls.Add(richTextBox1);
             Controls.Add(LabelPreviousInput);
             Controls.Add(TLPButtons);
             Controls.Add(TBInput);
@@ -88,5 +98,6 @@
         private TextBox TBInput;
         private TableLayoutPanel TLPButtons;
         private Label LabelPreviousInput;
+        private RichTextBox richTextBox1;
     }
 }
