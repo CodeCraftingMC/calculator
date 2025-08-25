@@ -88,6 +88,34 @@ namespace Calculator
             return (decimal)Math.Cosh((double)x) / (decimal)Math.Sinh((double)x);
         }
 
+
+        public static decimal Arcsinh(decimal x)
+        {
+            return (decimal)Math.Asinh((double)x);
+        }
+        public static decimal Arccosh(decimal x)
+        {
+            return (decimal)Math.Acosh((double)x);
+        }
+        public static decimal Arctanh(decimal x)
+        {
+            return (decimal)Math.Atanh((double)x);
+        }
+        public static decimal Arcsech(decimal x)
+        {
+            return (decimal)Math.Acosh((double)(1 / x));
+        }
+        public static decimal Arccoth(decimal x)
+        {
+            return (decimal)Math.Atanh((double)(1 / x));
+        }
+        public static decimal Arccsch(decimal x)
+        {
+            return (decimal)Math.Asinh((double)(1 / x));
+        }
+
+
+
         public static decimal Ans(decimal index, List<decimal> answers)
         {
             if (index < 1 || index > answers.Count)
