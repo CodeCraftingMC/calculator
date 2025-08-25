@@ -24,7 +24,7 @@ namespace Calculator
                 ("7", () => Append("7")),
                 ("8", () => Append("8")),
                 ("9", () => Append("9")),
-                ("ans", () => Append("ans(")),
+                ("^", () => Append("^")),
                 ("*", () => Append("*")),
                 ("4", () => Append("4")),
                 ("5", () => Append("5")),
@@ -41,6 +41,7 @@ namespace Calculator
             MakeCellsEqual(TLPButtons);
 
             LoadButtons();
+            LoadSpecialFunctions();
         }
 
         // stupid method because TableLayoutPanel is dumb and can"t make cells equal by itself
@@ -71,8 +72,9 @@ namespace Calculator
                 string input = TBInput.Text;
                 decimal result = Parser.Evaluate(input);
                 Parser.AppendHistory(result);
-                TBInput.Text = result.ToString();
-                TBInput.SelectionStart = TBInput.Text.Length;
+                RTBHistory.SelectionStart = 0;
+                RTBHistory.SelectionLength = 0;
+                RTBHistory.SelectedText = $"{input}\t= {result}\n";
             }
             catch (Exception ex)
             {
@@ -112,6 +114,22 @@ namespace Calculator
                 btn.Font = new(btn.Font.FontFamily, 24);
                 btn.Click += (s, e) => button.Click?.Invoke();
                 TLPButtons.Controls.Add(btn);
+            }
+        }
+
+        void LoadSpecialFunctions()
+        {
+            foreach(var func in Parser.specialFunctionMap)
+            {
+                Button btn = new()
+                {
+                    Text = func.Key,
+                };
+                btn.Font = new(btn.Font.FontFamily, 18);
+                btn.Height = 60;
+                btn.Width = 110;
+                btn.Click += (s, e) => Append(func.Key + "(");
+                FLPSpecialFunctions.Controls.Add(btn);
             }
         }
     }
