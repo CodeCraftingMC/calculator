@@ -114,6 +114,28 @@ namespace Calculator
             return (decimal)Math.Asinh((double)(1 / x));
         }
 
+        public static decimal Factorial(decimal x)
+        {
+            decimal result = 1;
+            for (decimal i = 1; i < x + 1; i++)
+            {
+                result *= i;
+            }
+
+            return result;
+        }
+
+        public static decimal Abs(decimal x)
+        {
+            return Math.Abs(x);
+        }
+
+        public static decimal Sqrt(decimal x)
+        {
+            return (decimal) Math.Sqrt((double)x);
+        }
+
+        public static decimal Log2()
 
 
         public static decimal Ans(decimal index, List<decimal> answers)
