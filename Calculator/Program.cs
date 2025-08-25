@@ -10,7 +10,7 @@ namespace Calculator
         {
             Parser p = new Parser();
         
-            p.Evaluate("sin(1) + cos(1) + tan(1) + cot(1) + sec(1) + csc(1)");
+            p.Evaluate("arcsin(1) + arccos(1) + arctan(2) + arccot(2) + arcsec(2) + arccsc(1)");
             //p.Evaluate("(1 + 1) * (0.5 + 0.5) + (0.5 - 0.5) * 2 * (1 / 3)");
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
