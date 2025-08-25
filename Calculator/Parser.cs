@@ -46,9 +46,21 @@ namespace Calculator
                 { "sec", SpecialFunctions.Sec },
                 { "csc", SpecialFunctions.Csc },
 
-                { "ans", (dec) => SpecialFunctions.Ans(dec, history) }
-            };
-        }
+            { "arcsin", SpecialFunctions.Arcsin },
+            { "arccos", SpecialFunctions.Arccos },
+            { "arctan", SpecialFunctions.Arctan },
+            { "arccot", SpecialFunctions.Arccot },
+            { "arcsec", SpecialFunctions.Arcsec },
+            { "arccsc", SpecialFunctions.Arccsc },
+
+            { "sinh", SpecialFunctions.Sinh },
+            { "Cosh", SpecialFunctions.Cosh },
+            { "Tanh", SpecialFunctions.Tanh },
+            { "Coth", SpecialFunctions.Coth },
+            { "Sech", SpecialFunctions.Sech },
+            { "Csch", SpecialFunctions.Csch },
+            { "ans", (dec) => SpecialFunctions.Ans(dec, history) },
+        };
 
         private ComponentType GetCharType(char c)
         {
@@ -313,6 +325,7 @@ namespace Calculator
         public void EvaluateSpecialFuncs(ref List<Component> components)
         {
             for (int i = 0; i < components.Count - 1; i++) { 
+                
                 Component c = components[i];
                 Component nc = components[i + 1];
                 if (c.GetType() == typeof(SpecialFunctionComponent) && nc.GetType() == typeof(DecimalComponent))
@@ -320,6 +333,7 @@ namespace Calculator
                     SpecialFunctionComponent? spc = c as SpecialFunctionComponent;
                     DecimalComponent? n = nc as DecimalComponent;
                     if (spc != null && n != null) {
+                        Console.WriteLine(spc.specialFunction);
                         DecimalComponent result = EvaluateSpecialFunc(spc, n);
                         components.RemoveAt(i);
                         components[i] = result;
@@ -482,7 +496,7 @@ namespace Calculator
             Console.WriteLine(result.n);
 
 
-            return 0;
+            return result.n;
         }
 
         public void AppendHistory(decimal dec)
