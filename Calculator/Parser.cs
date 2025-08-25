@@ -46,21 +46,22 @@ namespace Calculator
                 { "sec", SpecialFunctions.Sec },
                 { "csc", SpecialFunctions.Csc },
 
-            { "arcsin", SpecialFunctions.Arcsin },
-            { "arccos", SpecialFunctions.Arccos },
-            { "arctan", SpecialFunctions.Arctan },
-            { "arccot", SpecialFunctions.Arccot },
-            { "arcsec", SpecialFunctions.Arcsec },
-            { "arccsc", SpecialFunctions.Arccsc },
+                { "arcsin", SpecialFunctions.Arcsin },
+                { "arccos", SpecialFunctions.Arccos },
+                { "arctan", SpecialFunctions.Arctan },
+                { "arccot", SpecialFunctions.Arccot },
+                { "arcsec", SpecialFunctions.Arcsec },
+                { "arccsc", SpecialFunctions.Arccsc },
 
-            { "sinh", SpecialFunctions.Sinh },
-            { "Cosh", SpecialFunctions.Cosh },
-            { "Tanh", SpecialFunctions.Tanh },
-            { "Coth", SpecialFunctions.Coth },
-            { "Sech", SpecialFunctions.Sech },
-            { "Csch", SpecialFunctions.Csch },
-            { "ans", (dec) => SpecialFunctions.Ans(dec, history) },
-        };
+                { "sinh", SpecialFunctions.Sinh },
+                { "Cosh", SpecialFunctions.Cosh },
+                { "Tanh", SpecialFunctions.Tanh },
+                { "Coth", SpecialFunctions.Coth },
+                { "Sech", SpecialFunctions.Sech },
+                { "Csch", SpecialFunctions.Csch },
+                { "ans", (dec) => SpecialFunctions.Ans(dec, history) },
+            };
+        }
 
         private ComponentType GetCharType(char c)
         {
