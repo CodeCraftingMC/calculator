@@ -31,11 +31,15 @@
             TBInput = new TextBox();
             TLPButtons = new TableLayoutPanel();
             LabelPreviousInput = new Label();
-            richTextBox1 = new RichTextBox();
+            RTBHistory = new RichTextBox();
+            FLPSpecialFunctions = new FlowLayoutPanel();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // TBInput
             // 
+            TBInput.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             TBInput.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             TBInput.Location = new Point(12, 190);
             TBInput.Name = "TBInput";
@@ -51,14 +55,15 @@
             TLPButtons.ColumnStyles.Add(new ColumnStyle());
             TLPButtons.ColumnStyles.Add(new ColumnStyle());
             TLPButtons.ColumnStyles.Add(new ColumnStyle());
-            TLPButtons.Location = new Point(12, 231);
+            TLPButtons.Dock = DockStyle.Fill;
+            TLPButtons.Location = new Point(391, 3);
             TLPButtons.Name = "TLPButtons";
             TLPButtons.RowCount = 4;
             TLPButtons.RowStyles.Add(new RowStyle());
             TLPButtons.RowStyles.Add(new RowStyle());
             TLPButtons.RowStyles.Add(new RowStyle());
             TLPButtons.RowStyles.Add(new RowStyle());
-            TLPButtons.Size = new Size(776, 364);
+            TLPButtons.Size = new Size(382, 358);
             TLPButtons.TabIndex = 1;
             // 
             // LabelPreviousInput
@@ -70,25 +75,54 @@
             LabelPreviousInput.Size = new Size(0, 21);
             LabelPreviousInput.TabIndex = 2;
             // 
-            // richTextBox1
+            // RTBHistory
             // 
-            richTextBox1.Location = new Point(12, 12);
-            richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(776, 172);
-            richTextBox1.TabIndex = 3;
-            richTextBox1.Text = "";
+            RTBHistory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            RTBHistory.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            RTBHistory.Location = new Point(12, 12);
+            RTBHistory.Name = "RTBHistory";
+            RTBHistory.ReadOnly = true;
+            RTBHistory.Size = new Size(776, 172);
+            RTBHistory.TabIndex = 3;
+            RTBHistory.Text = "";
+            // 
+            // FLPSpecialFunctions
+            // 
+            FLPSpecialFunctions.AutoScroll = true;
+            FLPSpecialFunctions.Dock = DockStyle.Fill;
+            FLPSpecialFunctions.Location = new Point(3, 3);
+            FLPSpecialFunctions.Name = "FLPSpecialFunctions";
+            FLPSpecialFunctions.Size = new Size(382, 358);
+            FLPSpecialFunctions.TabIndex = 4;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Controls.Add(FLPSpecialFunctions, 0, 0);
+            tableLayoutPanel1.Controls.Add(TLPButtons, 1, 0);
+            tableLayoutPanel1.Location = new Point(12, 231);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Size = new Size(776, 364);
+            tableLayoutPanel1.TabIndex = 5;
             // 
             // CalculatorWindow
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 607);
-            Controls.Add(richTextBox1);
+            Controls.Add(tableLayoutPanel1);
+            Controls.Add(RTBHistory);
             Controls.Add(LabelPreviousInput);
-            Controls.Add(TLPButtons);
             Controls.Add(TBInput);
             Name = "CalculatorWindow";
             Text = "Form1";
+            tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -98,6 +132,8 @@
         private TextBox TBInput;
         private TableLayoutPanel TLPButtons;
         private Label LabelPreviousInput;
-        private RichTextBox richTextBox1;
+        private RichTextBox RTBHistory;
+        private FlowLayoutPanel FLPSpecialFunctions;
+        private TableLayoutPanel tableLayoutPanel1;
     }
 }
