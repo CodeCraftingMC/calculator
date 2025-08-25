@@ -60,5 +60,12 @@ namespace Calculator
         {
             return (decimal)Math.Asin((double)(1 / x));
         }
+
+        public static decimal Ans(decimal index, List<decimal> answers)
+        {
+            if (index < 1 || index > answers.Count)
+                throw new ArgumentOutOfRangeException(nameof(index), "Index out of range of answers list");
+            return answers[^((int)index)];
+        }
     }
 }
