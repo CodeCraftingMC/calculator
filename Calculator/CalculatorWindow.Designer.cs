@@ -47,7 +47,6 @@
             TBInput.Location = new Point(15, 405);
             TBInput.Margin = new Padding(6);
             TBInput.Name = "TBInput";
-            TBInput.ReadOnly = true;
             TBInput.Size = new Size(1456, 51);
             TBInput.TabIndex = 0;
             TBInput.Text = "1+2";
