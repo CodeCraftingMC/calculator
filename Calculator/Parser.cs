@@ -73,6 +73,11 @@ namespace Calculator
                 { "arccoth", SpecialFunctions.Arccoth },
                 { "arcsech", SpecialFunctions.Arcsech },
                 { "arccsch", SpecialFunctions.Arccsch },
+
+
+                { "log2", SpecialFunctions.Log2},
+                { "log10", SpecialFunctions.Log10},
+                { "log", SpecialFunctions.Log},
             };
         }
 
