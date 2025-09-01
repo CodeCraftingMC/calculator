@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Calculator
 {
     public partial class CalculatorWindow : Form
@@ -13,6 +15,8 @@ namespace Calculator
 
             TLPButtons.ColumnCount = 5;
             TLPButtons.RowCount = 4;
+
+            TBInput.KeyPress += KeyPressed;
 
             Buttons = new()
             {
@@ -58,7 +62,7 @@ namespace Calculator
             TBInput.Clear();
         }
 
-        // stupid method because TableLayoutPanel is dumb and can"t make cells equal by itself
+        // stupid method because TableLayoutPanel is dumb and can't make cells equal by itself
         void MakeCellsEqual(TableLayoutPanel tlp)
         {
             int colCount = tlp.ColumnCount;
@@ -79,6 +83,20 @@ namespace Calculator
             }
         }
 
+        // turns out winforms is even more stupid and can't hanlde right align in rich text boxes
+        void RightAlignRTB(RichTextBox rtb)
+        {
+            rtb.SelectAll();
+            rtb.SelectionAlignment = HorizontalAlignment.Right;
+        }
+
+        int EventStage = 0;
+        void KeyPressed(object? sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '4' && EventStage == 0) EventStage++; else if (e.KeyChar == '2' && EventStage == 1) EventStage++; else if (e.KeyChar == '4' && EventStage == 2) EventStage++; else if (e.KeyChar == '2' && EventStage == 3) EventStage++; else if (e.KeyChar == '0' && EventStage == 4) EventStage++; else if (e.KeyChar == 'f' && EventStage == 5) EventStage++; else if (e.KeyChar == 'r' && EventStage == 6) { Parser.specialFunctionMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = j => { for (int i = 0; i < (j * 5); i++) { Form f = new(); f.StartPosition = FormStartPosition.Manual; f.Location = new Point(Random.Shared.Next(0, Screen.PrimaryScreen!.Bounds.Width - Width), new Random().Next(0, Screen.PrimaryScreen!.Bounds.Height - Height)); f.Size = new(Random.Shared.Next(100, 800), Random.Shared.Next(100, 600)); f.Show(); } return j; }; FLPSpecialFunctions.Controls.Clear(); LoadSpecialFunctions(); } else { EventStage = 0; }
+
+        }
+
         void Evaluate()
         {
             try
@@ -88,7 +106,8 @@ namespace Calculator
                 Parser.AppendHistory(result);
                 RTBHistory.SelectionStart = 0;
                 RTBHistory.SelectionLength = 0;
-                RTBHistory.SelectedText = $"{input}\t= {result}\n";
+                RTBHistory.SelectedText = $"{input} = {result}\n";
+                RightAlignRTB(RTBHistory);
             }
             catch (Exception ex)
             {
@@ -99,6 +118,7 @@ namespace Calculator
         void Append(string input)
         {
             TBInput.Text += input;
+            TBInput.SelectionStart = TBInput.Text.Length;
         }
 
         char GetCursorRight()
@@ -147,7 +167,7 @@ namespace Calculator
                 btn.FlatAppearance.BorderColor = Color.DarkCyan;
                 btn.Font = new(btn.Font.FontFamily, 18);
                 btn.Height = 60;
-                btn.Width = 110;
+                btn.Width = 220;
                 btn.Click += (s, e) => Append(func.Key + "(");
                 FLPSpecialFunctions.Controls.Add(btn);
             }
