@@ -3,6 +3,7 @@ using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@ namespace Calculator
 
         HashSet<char> numberCharSet = new HashSet<char>();
         HashSet<char> operatorCharSet = new HashSet<char>();
-        HashSet<char> parenthesesCharSet = new HashSet<char>();
+        HashSet<char> bracketCharSet = new HashSet<char>();
 
         string numbers = "1234567890."; // number charset
         string operators = "+-/*^"; // operator charset
@@ -29,6 +30,7 @@ namespace Calculator
 
         public enum ComponentType // component types
         {
+            NONE,
             NUMBER,
             OPERATOR,
             BRACKET,
@@ -84,7 +86,7 @@ namespace Calculator
             else if (operatorCharSet.Contains(c)) {
                 return ComponentType.OPERATOR;
             }
-            else if (parenthesesCharSet.Contains(c))
+            else if (bracketCharSet.Contains(c))
             {
                 return ComponentType.BRACKET;
             }
@@ -177,6 +179,140 @@ namespace Calculator
                 ppcIsInt = pc.GetType() == typeof(DecimalComponent);
             }
         }
+        public (Component, int, ComponentType) parseNumber(int start, string expression)
+        {
+            int end = start;
+            while (end < expression.Length && numberCharSet.Contains(expression[end]))
+            {
+                end++;
+            }
+            decimal n = Decimal.Parse(expression[start..end]);
+
+            if (end == expression.Length)
+            {
+                return (new DecimalComponent(n), end, ComponentType.NONE);
+            }
+
+            ComponentType nextType = ComponentType.OPERATOR;
+
+            if (bracketCharSet.Contains(expression[end])){
+                nextType = ComponentType.BRACKET;
+            }
+
+            return (new DecimalComponent(n), end, nextType);
+        }
+
+        public (Component, int, ComponentType) parseOperator(int start, string expression)
+        {
+            int end = start;
+            while (operatorCharSet.Contains(expression[end]) && end < expression.Length)
+            {
+                end++;
+            }
+            string op = expression[start..end];
+
+            if (end == expression.Length)
+            {
+                return (new OperatorComponent(op), end, ComponentType.NONE);
+            }
+
+            char nextChar = expression[end];
+
+            ComponentType nextType;
+            if (numberCharSet.Contains(nextChar)) { 
+                nextType = ComponentType.NUMBER;
+            }
+            else if (bracketCharSet.Contains(nextChar))
+            {
+                nextType = ComponentType.BRACKET;
+            }
+            else
+            {
+                nextType = ComponentType.SPECIALFUNC;
+            }
+
+            return (new OperatorComponent(op), end, nextType);
+        }
+        public (Component, int, ComponentType) parseBracket(int start, string expression)
+        {
+            int end = start + 1;
+
+            string bracket = expression[start..end];
+
+            if (end == expression.Length)
+            {
+                return (new BracketComponent(bracket), end, ComponentType.NONE);
+            }
+
+            char nextChar = expression[end];
+
+            ComponentType nextType = ComponentType.SPECIALFUNC;
+            if (numberCharSet.Contains(nextChar))
+            {
+                nextType = ComponentType.NUMBER;
+            }
+            else if (bracketCharSet.Contains(nextChar))
+            {
+                nextType = ComponentType.BRACKET;
+            }
+            else if (operatorCharSet.Contains(nextChar))
+            {
+                nextType = ComponentType.OPERATOR;
+            }
+
+            return (new BracketComponent(bracket), end, nextType);
+        }
+
+
+        public (Component, int, ComponentType) parseSpecialFunc(int start, string expression)
+        {
+            int end = start;
+            while (!bracketCharSet.Contains(expression[end]) && end < expression.Length)
+            {
+                end++;
+            }
+            string sf = expression[start..end];
+
+            if (end == expression.Length)
+            {
+                return (new SpecialFunctionComponent(sf), end, ComponentType.NONE);
+            }
+            char nextChar = expression[end];
+
+            ComponentType nextType = ComponentType.BRACKET;
+
+            return (new SpecialFunctionComponent(sf), end, nextType);
+        }
+
+        public (Component component, int end, ComponentType nextType) parseComponent(int i, string expression, ComponentType type)
+        {
+            Component component;
+            int end;
+            ComponentType nextType;
+            if (type == ComponentType.NUMBER)
+            {
+                (component, end, nextType) = parseNumber(i, expression);
+            }
+            else if (type == ComponentType.OPERATOR)
+            {
+                (component, end, nextType) = parseOperator(i, expression);
+            }
+            else if (type == ComponentType.BRACKET)
+            {
+                (component, end, nextType) = parseBracket(i, expression);
+            }
+            else if (type == ComponentType.SPECIALFUNC)
+            {
+                (component, end, nextType) = parseSpecialFunc(i, expression);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            return (component, end, nextType);
+
+        }
 
         public List<Component> ParseComponentTypes(string expression)
         {
@@ -191,12 +327,33 @@ namespace Calculator
                 operatorCharSet.Add(c);
             }
             foreach(char c in brackets){
-                parenthesesCharSet.Add(c);
+                bracketCharSet.Add(c);
             }
 
             operatorHierarchy = new string[] { operators0, operators1, operators2 };
 
 
+
+            // parse
+            ComponentType type = GetCharType(expression[0]);
+
+            int i = 0;
+            ComponentType nextType = ComponentType.NUMBER;
+            while (i < expression.Length) {
+                (Component component, int end, nextType) = parseComponent(i, expression, type);
+
+                components.Add(component);
+
+                if (nextType == ComponentType.NONE) {
+                    break;
+                }
+
+                i = end;
+                type = nextType;
+
+      
+            }
+            /*                  
             string selection = "";
             ComponentType previousCharType = GetCharType(expression[0]);
 
@@ -218,6 +375,7 @@ namespace Calculator
                 previousCharType = cCharType;
             }
             AddCurrentSelection(selection, previousCharType, ref components);
+            */
 
             ParseNegatives(ref components);
             return components;
@@ -357,7 +515,10 @@ namespace Calculator
 
         public DecimalComponent EvaluateSimpleExpression(List<Component> components)
         {
+            Console.Write("simpleexpr ");
+            printComponents(components);
             EvaluateSpecialFuncs(ref components);
+            printComponents(components);
 
 
             for (int i = 0; i < operatorHierarchy.Count(); i++)
@@ -417,6 +578,7 @@ namespace Calculator
                 if (nOpeningBrackets != 0 && nOpeningBrackets == nClosingBrackets)
                 {
                     List<Component> subExpression = components.GetRange(start + 1, i - start - 1);
+                    Console.Write("eval ");
                     printComponents(subExpression);
 
                     DecimalComponent result = EvaluateParsed(subExpression);
@@ -424,6 +586,7 @@ namespace Calculator
                     components[start] = result;
 
                     i -= i - start;
+                    Console.Write("res ");
                     printComponents(components);
                     Console.WriteLine();
                     nOpeningBrackets = 0;

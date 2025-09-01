@@ -135,7 +135,7 @@ namespace Calculator
             return (decimal) Math.Sqrt((double)x);
         }
 
-        public static decimal Log2()
+        //public static decimal Log2()
 
 
         public static decimal Ans(decimal index, List<decimal> answers)
