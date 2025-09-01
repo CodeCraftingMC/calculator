@@ -110,7 +110,10 @@ namespace Calculator
                 {
                     Text = button.Name,
                     Dock = DockStyle.Fill,
+                    FlatStyle = FlatStyle.Flat,
+                    BackColor = Color.FromArgb(18, 32, 48)
                 };
+                btn.FlatAppearance.BorderColor = Color.DarkCyan;
                 btn.Font = new(btn.Font.FontFamily, 24);
                 btn.Click += (s, e) => button.Click?.Invoke();
                 TLPButtons.Controls.Add(btn);
@@ -124,7 +127,10 @@ namespace Calculator
                 Button btn = new()
                 {
                     Text = func.Key,
+                    FlatStyle = FlatStyle.Flat,
+                    BackColor = Color.FromArgb(18, 32, 48)
                 };
+                btn.FlatAppearance.BorderColor = Color.DarkCyan;
                 btn.Font = new(btn.Font.FontFamily, 18);
                 btn.Height = 60;
                 btn.Width = 110;

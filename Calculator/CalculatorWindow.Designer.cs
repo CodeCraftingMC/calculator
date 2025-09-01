@@ -40,10 +40,13 @@
             // TBInput
             // 
             TBInput.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            TBInput.BackColor = Color.FromArgb(18, 32, 48);
+            TBInput.BorderStyle = BorderStyle.None;
             TBInput.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TBInput.Location = new Point(12, 190);
+            TBInput.ForeColor = Color.White;
+            TBInput.Location = new Point(15, 190);
             TBInput.Name = "TBInput";
-            TBInput.Size = new Size(776, 35);
+            TBInput.Size = new Size(776, 28);
             TBInput.TabIndex = 0;
             TBInput.Text = "1+2";
             TBInput.TextAlign = HorizontalAlignment.Right;
@@ -63,7 +66,7 @@
             TLPButtons.RowStyles.Add(new RowStyle());
             TLPButtons.RowStyles.Add(new RowStyle());
             TLPButtons.RowStyles.Add(new RowStyle());
-            TLPButtons.Size = new Size(382, 358);
+            TLPButtons.Size = new Size(382, 365);
             TLPButtons.TabIndex = 1;
             // 
             // LabelPreviousInput
@@ -78,7 +81,10 @@
             // RTBHistory
             // 
             RTBHistory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            RTBHistory.BackColor = Color.FromArgb(18, 32, 48);
+            RTBHistory.BorderStyle = BorderStyle.None;
             RTBHistory.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            RTBHistory.ForeColor = Color.White;
             RTBHistory.Location = new Point(12, 12);
             RTBHistory.Name = "RTBHistory";
             RTBHistory.ReadOnly = true;
@@ -92,7 +98,7 @@
             FLPSpecialFunctions.Dock = DockStyle.Fill;
             FLPSpecialFunctions.Location = new Point(3, 3);
             FLPSpecialFunctions.Name = "FLPSpecialFunctions";
-            FLPSpecialFunctions.Size = new Size(382, 358);
+            FLPSpecialFunctions.Size = new Size(382, 365);
             FLPSpecialFunctions.TabIndex = 4;
             // 
             // tableLayoutPanel1
@@ -103,25 +109,27 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.Controls.Add(FLPSpecialFunctions, 0, 0);
             tableLayoutPanel1.Controls.Add(TLPButtons, 1, 0);
-            tableLayoutPanel1.Location = new Point(12, 231);
+            tableLayoutPanel1.Location = new Point(12, 224);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Size = new Size(776, 364);
+            tableLayoutPanel1.Size = new Size(776, 371);
             tableLayoutPanel1.TabIndex = 5;
             // 
             // CalculatorWindow
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(18, 18, 18);
             ClientSize = new Size(800, 607);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(RTBHistory);
             Controls.Add(LabelPreviousInput);
             Controls.Add(TBInput);
+            ForeColor = Color.White;
             Name = "CalculatorWindow";
-            Text = "Form1";
+            Text = "Calculator";
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
