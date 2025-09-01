@@ -75,10 +75,12 @@ namespace Calculator
 
     public class SpecialFunctionComponent : Component {
         public string specialFunction;
+        public List<decimal> args;
 
 
-        public SpecialFunctionComponent(string specialFunction) { 
+        public SpecialFunctionComponent(string specialFunction, List<decimal> args) { 
             this.specialFunction = specialFunction;
+            this.args = args;
         }
     }
 }

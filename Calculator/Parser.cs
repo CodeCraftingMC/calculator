@@ -26,7 +26,7 @@ namespace Calculator
         string[] operatorHierarchy = {}; // operator hierarchy
 
         List<decimal> history = new();
-        public Dictionary<string, Func<decimal, decimal>> specialFunctionMap;
+        public Dictionary<string, Func<decimal[], decimal>> specialFunctionMap;
 
         public enum ComponentType // component types
         {
@@ -44,7 +44,7 @@ namespace Calculator
                 {"fact", SpecialFunctions.Factorial},
                 {"abs", SpecialFunctions.Abs},
                 {"sqrt", SpecialFunctions.Sqrt},
-                { "ans", (dec) => SpecialFunctions.Ans(dec, history) },
+                { "ans", (dec) => SpecialFunctions.Ans(dec[0], history) },
 
                 { "sin", SpecialFunctions.Sin },
                 { "cos", SpecialFunctions.Cos },
@@ -93,25 +93,6 @@ namespace Calculator
             return ComponentType.SPECIALFUNC;
         }
 
-        private static void AddCurrentSelection(string selection, ComponentType type, ref List<Component> components)
-        {
-            /* adds a selection to a reference to the components. It takes the type into account*/
-            if (type == ComponentType.NUMBER)
-            {
-                components.Add(new DecimalComponent(Decimal.Parse(selection)));
-            }
-            else if (type == ComponentType.OPERATOR)
-            {
-                components.Add(new OperatorComponent(selection));
-            }
-            else if (type == ComponentType.BRACKET)
-            {
-                components.Add(new BracketComponent(selection));
-            }
-            else if (type == ComponentType.SPECIALFUNC) { 
-                components.Add(new SpecialFunctionComponent(selection));
-            }
-        }
 
         public void ParseNegatives(ref List<Component> components)
         {
@@ -167,6 +148,7 @@ namespace Calculator
                             else
                             {
                                 components.RemoveAt(i - 1);
+                                i -= 1;
                             }
                             components.Insert(i, new OperatorComponent("*"));
                             components.Insert(i, new DecimalComponent(Decimal.Parse("-1")));
@@ -271,17 +253,80 @@ namespace Calculator
             {
                 end++;
             }
+
             string sf = expression[start..end];
+
+            int nOpeningBrackets = 0;
+            int nClosingBrackets = 0;
+
+            int argstart = end + 1;
+            int argend = 0;
+
+            List<string> stringArgs = new List<string>();
+
+            for (int i = argstart; i < expression.Length; i++)
+            {
+                char c = expression[i];
+
+                if (bracketCharSet.Contains(c))
+                {
+                    if (c == '(')
+                    {
+                        if (nOpeningBrackets == nClosingBrackets)
+                        {
+                            argstart = i;
+                            Console.WriteLine("a" + i);
+                        }
+                        nOpeningBrackets++;
+                    }
+                    else if (c == ')')
+                    {
+                        nClosingBrackets++;
+                    }
+                    if (nClosingBrackets > nOpeningBrackets)
+                    {
+                        break;
+                    }
+                }
+
+                if (nOpeningBrackets == nClosingBrackets)
+                {
+                    argend = i;
+                    if (c == ',')
+                    {
+                        Console.WriteLine("e" + i + c);
+                        stringArgs.Add(expression[argstart..argend]);
+                        argstart = argend + 1;
+                    }
+                }
+            }
+            end = argend + 1;
+
+            stringArgs.Add(expression[argstart..end]);
+
+            List<Decimal> args = new List<Decimal>();
+
+
+            Console.WriteLine(sf);
+            for (int i = 0; i < stringArgs.Count; i++)
+            {
+                string stringArg = stringArgs[i];
+                decimal arg = Evaluate(stringArg);
+                args.Add(arg);
+                Console.WriteLine(arg);
+            }
+
+            SpecialFunctionComponent sfc = new SpecialFunctionComponent(sf, args);
 
             if (end == expression.Length)
             {
-                return (new SpecialFunctionComponent(sf), end, ComponentType.NONE);
+                return (sfc, end, ComponentType.NONE);
             }
             char nextChar = expression[end];
 
             ComponentType nextType = ComponentType.BRACKET;
 
-            return (new SpecialFunctionComponent(sf), end, nextType);
+            return (sfc, end, nextType);
         }
 
         public (Component component, int end, ComponentType nextType) parseComponent(int i, string expression, ComponentType type)
@@ -486,10 +531,10 @@ namespace Calculator
             return evaluated;
         }
 
-        public DecimalComponent EvaluateSpecialFunc(SpecialFunctionComponent spc, DecimalComponent n)
+        public DecimalComponent EvaluateSpecialFunc(SpecialFunctionComponent spc)
         {
 
-            return new DecimalComponent(specialFunctionMap[spc.specialFunction](n.n));
+            return new DecimalComponent(specialFunctionMap[spc.specialFunction](spc.args.ToArray()));
         }
 
         public void EvaluateSpecialFuncs(ref List<Component> components)
@@ -498,15 +543,13 @@ namespace Calculator
                 
                 Component c = components[i];
                 Component nc = components[i + 1];
-                if (c.GetType() == typeof(SpecialFunctionComponent) && nc.GetType() == typeof(DecimalComponent))
+                if (c.GetType() == typeof(SpecialFunctionComponent))
                 {
                     SpecialFunctionComponent? spc = c as SpecialFunctionComponent;
-                    DecimalComponent? n = nc as DecimalComponent;
-                    if (spc != null && n != null) {
-                        DecimalComponent result = EvaluateSpecialFunc(spc, n);
+                    if (spc != null) {
+                        DecimalComponent result = EvaluateSpecialFunc(spc);
                         components.RemoveAt(i);
                         components[i] = result;
-                        i -= 1;
                     }
 
                 }
@@ -638,6 +681,13 @@ namespace Calculator
                     if (spc != null)
                     {
                         Console.Write(spc.specialFunction);
+                        Console.Write("[");
+                        foreach (decimal arg in spc.args)
+                        {
+                            Console.Write(arg.ToString());
+                            Console.Write(";");
+                        }
+                        Console.Write("]");
                     }
                 }
 
