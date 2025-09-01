@@ -16,7 +16,7 @@ namespace Calculator
 
             Buttons = new()
             {
-                ("CE", TBInput.Clear),
+                ("CE", ClearEntry),
                 ("C", TBInput.Clear),
                 ("(", () => Append("(")),
                 (")", () => Append(")")),
@@ -42,6 +42,20 @@ namespace Calculator
 
             LoadButtons();
             LoadSpecialFunctions();
+        }
+
+        void ClearEntry()
+        {
+
+            for(int i = TBInput.Text.Length - 1; i >= 0; i--)
+            {
+                char c = TBInput.Text[i];
+                if (char.IsDigit(c) || char.IsLetter(c)) continue;
+
+                TBInput.Text = TBInput.Text[..i];
+                return;
+            }
+            TBInput.Clear();
         }
 
         // stupid method because TableLayoutPanel is dumb and can"t make cells equal by itself
