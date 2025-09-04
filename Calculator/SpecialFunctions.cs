@@ -175,6 +175,17 @@
             return (decimal)Math.Log((double)x, (double)y);
         }
 
+        public static decimal Ln(decimal[] args)
+        {
+            decimal x = args[0];
+            return (decimal)Math.Log((double)x, Math.E);
+        }
+        public static decimal Exp(decimal[] args)
+        {
+            decimal x = args[0];
+            return (decimal)Math.Exp((double)x);
+        }
+
 
 
         public static decimal Ans(decimal index, List<decimal> answers)
