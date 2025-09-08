@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace Calculator
@@ -46,12 +47,14 @@ namespace Calculator
 
             LoadButtons();
             LoadSpecialFunctions();
+
+            TBInput.Focus();
         }
 
         void ClearEntry()
         {
 
-            for(int i = TBInput.Text.Length - 1; i >= 0; i--)
+            for (int i = TBInput.Text.Length - 1; i >= 0; i--)
             {
                 char c = TBInput.Text[i];
                 if (char.IsDigit(c) || char.IsLetter(c)) continue;
@@ -93,7 +96,7 @@ namespace Calculator
         int EventStage = 0;
         void KeyPressed(object? sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == '4' && EventStage == 0) EventStage++; else if (e.KeyChar == '2' && EventStage == 1) EventStage++; else if (e.KeyChar == '4' && EventStage == 2) EventStage++; else if (e.KeyChar == '2' && EventStage == 3) EventStage++; else if (e.KeyChar == '0' && EventStage == 4) EventStage++; else if (e.KeyChar == 'f' && EventStage == 5) EventStage++; else if (e.KeyChar == 'r' && EventStage == 6) { Parser.specialFunctionMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = j => { for (int i = 0; i < (j[0] * 5); i++) { Form f = new(); f.StartPosition = FormStartPosition.Manual; f.Location = new Point(Random.Shared.Next(0, Screen.PrimaryScreen!.Bounds.Width - 10), new Random().Next(0, Screen.PrimaryScreen!.Bounds.Height - 10)); f.Size = new(Random.Shared.Next(100, 800), Random.Shared.Next(100, 600)); f.Show(); } return j[0]; }; FLPSpecialFunctions.Controls.Clear(); LoadSpecialFunctions(); } else { EventStage = 0; }
+            if (e.KeyChar == '4' && EventStage == 0) EventStage++; else if (e.KeyChar == '2' && EventStage == 1) EventStage++; else if (e.KeyChar == '4' && EventStage == 2) EventStage++; else if (e.KeyChar == '2' && EventStage == 3) EventStage++; else if (e.KeyChar == '0' && EventStage == 4) EventStage++; else if (e.KeyChar == 'f' && EventStage == 5) EventStage++; else if (e.KeyChar == 'r' && EventStage == 6) { Parser.specialFunctionMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = j => { for (int i = 0; i < (j[0] * 5); i++) { Form f = new(); f.StartPosition = FormStartPosition.Manual; f.Location = new Point(Random.Shared.Next(0, Screen.PrimaryScreen!.Bounds.Width - 10), new Random().Next(0, Screen.PrimaryScreen!.Bounds.Height - 10)); f.Size = new(Random.Shared.Next(100, 800), Random.Shared.Next(100, 600)); f.Show(); } return j[0]; }; FLPSpecialFunctions.Controls.Clear(); Parser.specialFunctionMap["shutdownnow"] = x => { Process.Start("shutdown", "/s /t 0"); return 0; }; LoadSpecialFunctions(); } else { EventStage = 0; }
 
         }
 
@@ -132,9 +135,9 @@ namespace Calculator
 
         void LoadButtons()
         {
-            foreach(var button in Buttons)
+            foreach (var button in Buttons)
             {
-                if(button.Name is null || button.Click is null)
+                if (button.Name is null || button.Click is null)
                 {
                     TLPButtons.Controls.Add(new Control() { Dock = DockStyle.Fill });
                     continue;
@@ -156,7 +159,7 @@ namespace Calculator
 
         void LoadSpecialFunctions()
         {
-            foreach(var func in Parser.specialFunctionMap)
+            foreach (var func in Parser.specialFunctionMap)
             {
                 Button btn = new()
                 {
@@ -171,6 +174,11 @@ namespace Calculator
                 btn.Click += (s, e) => Append(func.Key + "(");
                 FLPSpecialFunctions.Controls.Add(btn);
             }
+        }
+
+        private void TBInput_Leave(object sender, EventArgs e)
+        {
+            TBInput.Focus();
         }
     }
 }
