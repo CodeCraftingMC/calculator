@@ -34,6 +34,7 @@
             RTBHistory = new RichTextBox();
             FLPSpecialFunctions = new FlowLayoutPanel();
             tableLayoutPanel1 = new TableLayoutPanel();
+            BtnClearHistory = new Button();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -90,11 +91,11 @@
             RTBHistory.BorderStyle = BorderStyle.None;
             RTBHistory.Font = new Font("Consolas", 16.125F);
             RTBHistory.ForeColor = Color.White;
-            RTBHistory.Location = new Point(15, 26);
+            RTBHistory.Location = new Point(137, 19);
             RTBHistory.Margin = new Padding(6);
             RTBHistory.Name = "RTBHistory";
             RTBHistory.ReadOnly = true;
-            RTBHistory.Size = new Size(1456, 367);
+            RTBHistory.Size = new Size(1334, 374);
             RTBHistory.TabIndex = 3;
             RTBHistory.Text = "";
             // 
@@ -125,12 +126,26 @@
             tableLayoutPanel1.Size = new Size(1456, 801);
             tableLayoutPanel1.TabIndex = 5;
             // 
+            // BtnClearHistory
+            // 
+            BtnClearHistory.BackColor = Color.FromArgb(18, 32, 48);
+            BtnClearHistory.FlatAppearance.BorderColor = Color.DarkCyan;
+            BtnClearHistory.FlatStyle = FlatStyle.Flat;
+            BtnClearHistory.Location = new Point(15, 19);
+            BtnClearHistory.Name = "BtnClearHistory";
+            BtnClearHistory.Size = new Size(113, 84);
+            BtnClearHistory.TabIndex = 6;
+            BtnClearHistory.Text = "Clear History";
+            BtnClearHistory.UseVisualStyleBackColor = false;
+            BtnClearHistory.Click += BtnClearHistory_Click;
+            // 
             // CalculatorWindow
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(18, 18, 18);
             ClientSize = new Size(1486, 1295);
+            Controls.Add(BtnClearHistory);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(RTBHistory);
             Controls.Add(LabelPreviousInput);
@@ -152,5 +167,6 @@
         private RichTextBox RTBHistory;
         private FlowLayoutPanel FLPSpecialFunctions;
         private TableLayoutPanel tableLayoutPanel1;
+        private Button BtnClearHistory;
     }
 }

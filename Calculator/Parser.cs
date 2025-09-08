@@ -855,5 +855,10 @@ namespace Calculator
         {
             history.Add(dec);
         }
+
+        public void ClearHistory()
+        {
+            history.Clear();
+        }
     }
 }
