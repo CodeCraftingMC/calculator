@@ -92,9 +92,9 @@ namespace Calculator
 
             constantsMap = new()
             {
-                {"pi", Math.PI},
-                {"e", Math.E},
-                {"tau", Math.PI * 2},
+                {"pi", MathConstants.PI},
+                {"e", MathConstants.E},
+                {"tau", MathConstants.PI * 2},
                 {"inf", double.PositiveInfinity},
             };
 

@@ -185,7 +185,7 @@
         public static double Ln(double[] args)
         {
             double x = args[0];
-            return (double)Math.Log((double)x, Math.E);
+            return (double)Math.Log((double)x, MathConstants.E);
         }
         public static double Exp(double[] args)
         {
