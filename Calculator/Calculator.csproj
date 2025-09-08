@@ -9,6 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Update="e.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="pi.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
