@@ -32,6 +32,8 @@ namespace Calculator
         public Dictionary<string, double> constantsMap;
         public Dictionary<string, int> argumentCountMap;
 
+        Dictionary<string, List<string>> specialFuncGroups = new();
+
         public enum ComponentType // component types
         {
             NONE,
@@ -144,7 +146,47 @@ namespace Calculator
                 { "mod", 2}
             };
 
+            specialFuncGroups = new()
+            {
+                {
+                    "Exp",
+                    new()
+                    {
+                        "sqrt",
+                        "root",
+                        "log2",
+                        "log10",
+                        "ln",
+                        "log",
+                        "exp",
+                    }
+                },
+
+                {
+                    "Trig",
+                    new()
+                    {
+                        "sin", "cos", "tan", "cot", "sec", "csc",
+                        "arcsin", "arccos", "arctan", "arccot", "arcsec", "arccsc",
+                        "sinh", "cosh", "tanh", "coth", "sech", "csch",
+                        "arcsinh", "arccosh", "arctanh", "arccoth", "arcsech", "arccsch"
+                    }
+                },
+
+                {
+                    "Other",
+                    new()
+                    {
+                        "abs",
+                        "mod",
+                        "fact",
+                    }
+                },
+
+
+            };
         }
+
 
         private ComponentType GetCharType(char c)
         {
