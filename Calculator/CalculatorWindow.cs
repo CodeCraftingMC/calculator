@@ -47,12 +47,14 @@ namespace Calculator
 
             LoadButtons();
             LoadSpecialFunctions();
+
+            TBInput.Focus();
         }
 
         void ClearEntry()
         {
 
-            for(int i = TBInput.Text.Length - 1; i >= 0; i--)
+            for (int i = TBInput.Text.Length - 1; i >= 0; i--)
             {
                 char c = TBInput.Text[i];
                 if (char.IsDigit(c) || char.IsLetter(c)) continue;
@@ -133,9 +135,9 @@ namespace Calculator
 
         void LoadButtons()
         {
-            foreach(var button in Buttons)
+            foreach (var button in Buttons)
             {
-                if(button.Name is null || button.Click is null)
+                if (button.Name is null || button.Click is null)
                 {
                     TLPButtons.Controls.Add(new Control() { Dock = DockStyle.Fill });
                     continue;
@@ -157,7 +159,7 @@ namespace Calculator
 
         void LoadSpecialFunctions()
         {
-            foreach(var func in Parser.specialFunctionMap)
+            foreach (var func in Parser.specialFunctionMap)
             {
                 Button btn = new()
                 {
@@ -172,6 +174,11 @@ namespace Calculator
                 btn.Click += (s, e) => Append(func.Key + "(");
                 FLPSpecialFunctions.Controls.Add(btn);
             }
+        }
+
+        private void TBInput_Leave(object sender, EventArgs e)
+        {
+            TBInput.Focus();
         }
     }
 }
