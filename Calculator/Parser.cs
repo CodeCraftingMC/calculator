@@ -439,7 +439,6 @@ namespace Calculator
         public (Component, int, ComponentType) parseSpecialFunc(int start, string expression)
         {
             int end = start;
-            Console.WriteLine(start);
             while (true)
             {
                 if (end == expression.Length || operatorCharSet.Contains(expression[end]) || expression[end] == ')') { 
@@ -469,7 +468,6 @@ namespace Calculator
             {
                 nextType = ComponentType.BRACKET;
             }
-            Console.Write(expression[end]);
             return (sfc, end, nextType);
         }
 
@@ -629,7 +627,6 @@ namespace Calculator
         {
             Component c = components[i];
 
-            printComponents(components, verbose);
             Component left = components[i - 1];
             Component right = components[i + 1];
             OperatorComponent? op = c as OperatorComponent;
@@ -651,8 +648,6 @@ namespace Calculator
 
             components.RemoveRange(i - 1, 2);
             components[i - 1] = result;
-
-            printComponents(components, verbose);
         }
 
         public DecimalComponent GetResult(List<Component> components)
