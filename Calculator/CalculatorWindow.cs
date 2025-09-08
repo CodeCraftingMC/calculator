@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Text.Json.Serialization;
 
 namespace Calculator
@@ -119,7 +120,15 @@ namespace Calculator
                 Parser.AppendHistory(result);
                 RTBHistory.SelectionStart = 0;
                 RTBHistory.SelectionLength = 0;
-                RTBHistory.SelectedText = $"{input} = {result}\n";
+
+                string str = result.ToString("R", CultureInfo.InvariantCulture);
+
+                // Check if it contains 'E' (scientific notation)
+                if (str.Contains('E') || str.Contains('e'))
+                {
+                    str = result.ToString("0." + new string('#', 339) + ""); // 339 is max digits for double
+                }
+                RTBHistory.SelectedText = $"{input} = {str}\n";
                 RightAlignRTB(RTBHistory);
             }
             catch (Exception ex)
