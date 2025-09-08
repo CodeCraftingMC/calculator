@@ -180,5 +180,13 @@ namespace Calculator
         {
             TBInput.Focus();
         }
+
+        private void TBInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Evaluate();
+            }
+        }
     }
 }
