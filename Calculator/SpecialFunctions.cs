@@ -156,7 +156,36 @@
             return (decimal)Math.Sqrt((double)x);
         }
 
-        //public static decimal Log2()
+        public static decimal Log2(decimal[] args)
+        {
+            decimal x = args[0];
+            return (decimal)Math.Log((double)x, 2.0);
+        }
+
+        public static decimal Log10(decimal[] args)
+        {
+            decimal x = args[0];
+            return (decimal)Math.Log((double)x, 10.0);
+        }
+
+        public static decimal Log(decimal[] args)
+        {
+            decimal x = args[0];
+            decimal y = args[1];
+            return (decimal)Math.Log((double)x, (double)y);
+        }
+
+        public static decimal Ln(decimal[] args)
+        {
+            decimal x = args[0];
+            return (decimal)Math.Log((double)x, Math.E);
+        }
+        public static decimal Exp(decimal[] args)
+        {
+            decimal x = args[0];
+            return (decimal)Math.Exp((double)x);
+        }
+
 
 
         public static decimal Ans(decimal index, List<decimal> answers)
