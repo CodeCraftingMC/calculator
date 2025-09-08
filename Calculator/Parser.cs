@@ -32,6 +32,8 @@ namespace Calculator
         public Dictionary<string, double> constantsMap;
         public Dictionary<string, int> argumentCountMap;
 
+        Dictionary<string, List<string>> specialFuncGroups = new();
+
         public enum ComponentType // component types
         {
             NONE,
@@ -144,7 +146,47 @@ namespace Calculator
                 { "mod", 2}
             };
 
+            specialFuncGroups = new()
+            {
+                {
+                    "Exp",
+                    new()
+                    {
+                        "sqrt",
+                        "root",
+                        "log2",
+                        "log10",
+                        "ln",
+                        "log",
+                        "exp",
+                    }
+                },
+
+                {
+                    "Trig",
+                    new()
+                    {
+                        "sin", "cos", "tan", "cot", "sec", "csc",
+                        "arcsin", "arccos", "arctan", "arccot", "arcsec", "arccsc",
+                        "sinh", "cosh", "tanh", "coth", "sech", "csch",
+                        "arcsinh", "arccosh", "arctanh", "arccoth", "arcsech", "arccsch"
+                    }
+                },
+
+                {
+                    "Other",
+                    new()
+                    {
+                        "abs",
+                        "mod",
+                        "fact",
+                    }
+                },
+
+
+            };
         }
+
 
         private ComponentType GetCharType(char c)
         {
@@ -397,7 +439,6 @@ namespace Calculator
         public (Component, int, ComponentType) parseSpecialFunc(int start, string expression)
         {
             int end = start;
-            Console.WriteLine(start);
             while (true)
             {
                 if (end == expression.Length || operatorCharSet.Contains(expression[end]) || expression[end] == ')') { 
@@ -427,7 +468,6 @@ namespace Calculator
             {
                 nextType = ComponentType.BRACKET;
             }
-            Console.Write(expression[end]);
             return (sfc, end, nextType);
         }
 
@@ -587,7 +627,6 @@ namespace Calculator
         {
             Component c = components[i];
 
-            printComponents(components, verbose);
             Component left = components[i - 1];
             Component right = components[i + 1];
             OperatorComponent? op = c as OperatorComponent;
@@ -609,8 +648,6 @@ namespace Calculator
 
             components.RemoveRange(i - 1, 2);
             components[i - 1] = result;
-
-            printComponents(components, verbose);
         }
 
         public DecimalComponent GetResult(List<Component> components)
