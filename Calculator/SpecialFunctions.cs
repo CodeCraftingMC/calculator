@@ -3,140 +3,140 @@
     class SpecialFunctions
     {
 
-        public static decimal Sin(decimal[] args)
+        public static double Sin(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Sin((double)x);
+            double x = args[0];
+            return (double)Math.Sin((double)x);
         }
-        public static decimal Cos(decimal[] args)
+        public static double Cos(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Cos((double)x);
+            double x = args[0];
+            return (double)Math.Cos((double)x);
         }
-        public static decimal Tan(decimal[] args)
+        public static double Tan(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Tan((double)x);
+            double x = args[0];
+            return (double)Math.Tan((double)x);
         }
-        public static decimal Cot(decimal[] args)
+        public static double Cot(double[] args)
         {
-            decimal x = args[0];
-            return 1 / (decimal)Math.Tan((double)x);
+            double x = args[0];
+            return 1 / (double)Math.Tan((double)x);
         }
-        public static decimal Sec(decimal[] args)
+        public static double Sec(double[] args)
         {
-            decimal x = args[0];
-            return 1 / (decimal)Math.Cos((double)x);
+            double x = args[0];
+            return 1 / (double)Math.Cos((double)x);
         }
-        public static decimal Csc(decimal[] args)
+        public static double Csc(double[] args)
         {
-            decimal x = args[0];
-            return 1 / (decimal)Math.Sin((double)x);
-        }
-
-
-
-        public static decimal Arcsin(decimal[] args)
-        {
-            decimal x = args[0];
-            return (decimal)Math.Asin((double)x);
-        }
-        public static decimal Arccos(decimal[] args)
-        {
-            decimal x = args[0];
-            return (decimal)Math.Acos((double)x);
-        }
-        public static decimal Arctan(decimal[] args)
-        {
-            decimal x = args[0];
-            return (decimal)Math.Atan((double)x);
-        }
-        public static decimal Arccot(decimal[] args)
-        {
-            decimal x = args[0];
-            return (decimal)Math.Atan((double)(1 / x));
-        }
-        public static decimal Arcsec(decimal[] args)
-        {
-            decimal x = args[0];
-            return (decimal)Math.Acos((double)(1 / x));
-        }
-        public static decimal Arccsc(decimal[] args)
-        {
-            decimal x = args[0];
-            return (decimal)Math.Asin((double)(1 / x));
+            double x = args[0];
+            return 1 / (double)Math.Sin((double)x);
         }
 
 
 
-        public static decimal Sinh(decimal[] args)
+        public static double Arcsin(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Sinh((double)x);
+            double x = args[0];
+            return (double)Math.Asin((double)x);
         }
-        public static decimal Cosh(decimal[] args)
+        public static double Arccos(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Cosh((double)x);
+            double x = args[0];
+            return (double)Math.Acos((double)x);
         }
-        public static decimal Tanh(decimal[] args)
+        public static double Arctan(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Tanh((double)x);
+            double x = args[0];
+            return (double)Math.Atan((double)x);
         }
-        public static decimal Csch(decimal[] args)
+        public static double Arccot(double[] args)
         {
-            decimal x = args[0];
-            return 1 / (decimal)Math.Sinh((double)x);
+            double x = args[0];
+            return (double)Math.Atan((double)(1 / x));
         }
-        public static decimal Sech(decimal[] args)
+        public static double Arcsec(double[] args)
         {
-            decimal x = args[0];
-            return 1 / (decimal)Math.Cosh((double)x);
+            double x = args[0];
+            return (double)Math.Acos((double)(1 / x));
         }
-        public static decimal Coth(decimal[] args)
+        public static double Arccsc(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Cosh((double)x) / (decimal)Math.Sinh((double)x);
+            double x = args[0];
+            return (double)Math.Asin((double)(1 / x));
+        }
+
+
+
+        public static double Sinh(double[] args)
+        {
+            double x = args[0];
+            return (double)Math.Sinh((double)x);
+        }
+        public static double Cosh(double[] args)
+        {
+            double x = args[0];
+            return (double)Math.Cosh((double)x);
+        }
+        public static double Tanh(double[] args)
+        {
+            double x = args[0];
+            return (double)Math.Tanh((double)x);
+        }
+        public static double Csch(double[] args)
+        {
+            double x = args[0];
+            return 1 / (double)Math.Sinh((double)x);
+        }
+        public static double Sech(double[] args)
+        {
+            double x = args[0];
+            return 1 / (double)Math.Cosh((double)x);
+        }
+        public static double Coth(double[] args)
+        {
+            double x = args[0];
+            return (double)Math.Cosh((double)x) / (double)Math.Sinh((double)x);
         }
 
 
-        public static decimal Arcsinh(decimal[] args)
+        public static double Arcsinh(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Asinh((double)x);
+            double x = args[0];
+            return (double)Math.Asinh((double)x);
         }
-        public static decimal Arccosh(decimal[] args)
+        public static double Arccosh(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Acosh((double)x);
+            double x = args[0];
+            return (double)Math.Acosh((double)x);
         }
-        public static decimal Arctanh(decimal[] args)
+        public static double Arctanh(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Atanh((double)x);
+            double x = args[0];
+            return (double)Math.Atanh((double)x);
         }
-        public static decimal Arcsech(decimal[] args)
+        public static double Arcsech(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Acosh((double)(1 / x));
+            double x = args[0];
+            return (double)Math.Acosh((double)(1 / x));
         }
-        public static decimal Arccoth(decimal[] args)
+        public static double Arccoth(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Atanh((double)(1 / x));
+            double x = args[0];
+            return (double)Math.Atanh((double)(1 / x));
         }
-        public static decimal Arccsch(decimal[] args)
+        public static double Arccsch(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Asinh((double)(1 / x));
+            double x = args[0];
+            return (double)Math.Asinh((double)(1 / x));
         }
 
-        public static decimal Factorial(decimal[] args)
+        public static double Factorial(double[] args)
         {
-            decimal x = args[0];
-            decimal result = 1;
-            for (decimal i = 1; i < x + 1; i++)
+            double x = args[0];
+            double result = 1;
+            for (double i = 1; i < x + 1; i++)
             {
                 result *= i;
             }
@@ -144,64 +144,64 @@
             return result;
         }
 
-        public static decimal Abs(decimal[] args)
+        public static double Abs(double[] args)
         {
-            decimal x = args[0];
+            double x = args[0];
             return Math.Abs(x);
         }
 
-        public static decimal Sqrt(decimal[] args)
+        public static double Sqrt(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Sqrt((double)x);
+            double x = args[0];
+            return (double)Math.Sqrt((double)x);
         }
 
-        public static decimal Root(decimal[] args)
+        public static double Root(double[] args)
         {
-            decimal x = args[0];
-            decimal _base = args[1];
-            return (decimal)Math.Pow((double) x, 1.0 / (double) _base);
+            double x = args[0];
+            double _base = args[1];
+            return (double)Math.Pow((double) x, 1.0 / (double) _base);
         }
 
-        public static decimal Log2(decimal[] args)
+        public static double Log2(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Log((double)x, 2.0);
+            double x = args[0];
+            return (double)Math.Log((double)x, 2.0);
         }
 
-        public static decimal Log10(decimal[] args)
+        public static double Log10(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Log((double)x, 10.0);
+            double x = args[0];
+            return (double)Math.Log((double)x, 10.0);
         }
 
-        public static decimal Log(decimal[] args)
+        public static double Log(double[] args)
         {
-            decimal x = args[0];
-            decimal y = args[1];
-            return (decimal)Math.Log((double)x, (double)y);
+            double x = args[0];
+            double y = args[1];
+            return (double)Math.Log((double)x, (double)y);
         }
 
-        public static decimal Ln(decimal[] args)
+        public static double Ln(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Log((double)x, Math.E);
+            double x = args[0];
+            return (double)Math.Log((double)x, Math.E);
         }
-        public static decimal Exp(decimal[] args)
+        public static double Exp(double[] args)
         {
-            decimal x = args[0];
-            return (decimal)Math.Exp((double)x);
+            double x = args[0];
+            return (double)Math.Exp((double)x);
         }
 
-        public static decimal Mod(decimal[] args)
+        public static double Mod(double[] args)
         {
-            decimal x = args[0];
-            decimal y = args[1];
+            double x = args[0];
+            double y = args[1];
             return x % y;
         }
 
 
-        public static decimal Ans(decimal index, List<decimal> answers)
+        public static double Ans(double index, List<double> answers)
         {
             if (index < 1 || index > answers.Count)
                 throw new ArgumentOutOfRangeException(nameof(index), "Index out of range of answers list");
