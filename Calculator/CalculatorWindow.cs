@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json.Serialization;
 
@@ -26,12 +26,12 @@ namespace Calculator
                 ("CE", ClearEntry),
                 ("<-", () => { if(TBInput.Text.Length > 0) { TBInput.Text = TBInput.Text[..^1]; TBInput.SelectionStart = TBInput.Text.Length; } }),
                 ("e", () => Append("e")),
-                ("pi", () => Append("pi")),
+                ("π", () => Append("pi")),
                 ("(", () => Append("(")),
                 (")", () => Append(")")),
                 ("^2", () => Append("^2")),
                 ("^", () => Append("^")),
-                ("tau", () => Append("tau")),
+                ("τ", () => Append("tau")),
                 ("7", () => Append("7")),
                 ("8", () => Append("8")),
                 ("9", () => Append("9")),
