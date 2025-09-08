@@ -15,32 +15,42 @@ namespace Calculator
             Parser = new();
 
             TLPButtons.ColumnCount = 5;
-            TLPButtons.RowCount = 4;
+            TLPButtons.RowCount = 6;
 
             TBInput.KeyPress += KeyPressed;
 
             Buttons = new()
             {
-                ("CE", ClearEntry),
                 ("C", TBInput.Clear),
+                ("CE", ClearEntry),
+                ("<-", () => { if(TBInput.Text.Length > 0) { TBInput.Text = TBInput.Text[..^1]; TBInput.SelectionStart = TBInput.Text.Length; } }),
+                ("e", () => Append("e")),
+                ("pi", () => Append("pi")),
                 ("(", () => Append("(")),
                 (")", () => Append(")")),
-                ("/", () => Append("/")),
+                ("^2", () => Append("^2")),
+                ("^", () => Append("^")),
+                ("tau", () => Append("tau")),
                 ("7", () => Append("7")),
                 ("8", () => Append("8")),
                 ("9", () => Append("9")),
-                ("^", () => Append("^")),
-                ("*", () => Append("*")),
+                ("/", () => Append("/")),
+                ("1/x", () => AppendStart("1/(")),
                 ("4", () => Append("4")),
                 ("5", () => Append("5")),
                 ("6", () => Append("6")),
-                ("=", () => Evaluate()),
-                ("-", () => Append("-")),
+                ("*", () => Append("3")),
+                ("10^x", () => AppendStart("10^(")),
                 ("1", () => Append("1")),
                 ("2", () => Append("2")),
                 ("3", () => Append("3")),
+                ("-", () => Append("-")),
+                ("sqrt(x", () => AppendStart("sqrt(")),
+                (".", () => Append(".")),
                 ("0", () => Append("0")),
+                (",", () => Append(",")),
                 ("+", () => Append("+")),
+                ("=", () => Evaluate()),
             };
 
             MakeCellsEqual(TLPButtons);
@@ -124,6 +134,12 @@ namespace Calculator
             TBInput.SelectionStart = TBInput.Text.Length;
         }
 
+        void AppendStart(string input)
+        {
+            TBInput.Text = input + TBInput.Text;
+            TBInput.SelectionStart = TBInput.Text.Length;
+        }
+
         char GetCursorRight()
         {
             if (TBInput.SelectionStart < TBInput.Text.Length)
@@ -151,7 +167,7 @@ namespace Calculator
                     BackColor = Color.FromArgb(18, 32, 48)
                 };
                 btn.FlatAppearance.BorderColor = Color.DarkCyan;
-                btn.Font = new(btn.Font.FontFamily, 24);
+                btn.Font = new(btn.Font.FontFamily, 18);
                 btn.Click += (s, e) => button.Click?.Invoke();
                 TLPButtons.Controls.Add(btn);
             }
@@ -187,6 +203,12 @@ namespace Calculator
             {
                 Evaluate();
             }
+        }
+
+        private void BtnClearHistory_Click(object sender, EventArgs e)
+        {
+            Parser.ClearHistory();
+            RTBHistory.Clear();
         }
     }
 }
