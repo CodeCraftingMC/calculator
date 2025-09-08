@@ -27,9 +27,10 @@ namespace Calculator
 
         string[] operatorHierarchy = {}; // operator hierarchy
 
-        List<decimal> history = new();
-        public Dictionary<string, Func<decimal[], decimal>> specialFunctionMap;
+        List<double> history = new();
+        public Dictionary<string, Func<double[], double>> specialFunctionMap;
         public Dictionary<string, double> constantsMap;
+        public Dictionary<string, int> argumentCountMap;
 
         public enum ComponentType // component types
         {
@@ -94,6 +95,53 @@ namespace Calculator
                 {"pi", Math.PI},
                 {"e", Math.E},
                 {"tau", Math.PI * 2},
+                {"inf", double.PositiveInfinity},
+            };
+
+            argumentCountMap = new()
+            {
+                {"fact", 1},
+                {"abs", 1},
+                {"sqrt", 1},
+                {"root", 2},
+                { "ans", 1},
+
+                { "sin", 1},
+                { "cos", 1},
+                { "tan", 1},
+                { "cot", 1},
+                { "sec", 1},
+                { "csc", 1},
+
+                { "arcsin", 1},
+                { "arccos", 1},
+                { "arctan", 1},
+                { "arccot", 1},
+                { "arcsec", 1},
+                { "arccsc", 1},
+
+                { "sinh", 1},
+                { "cosh", 1},
+                { "tanh", 1},
+                { "coth", 1},
+                { "sech", 1},
+                { "csch", 1},
+
+                { "arcsinh", 1},
+                { "arccosh", 1},
+                { "arctanh", 1},
+                { "arccoth", 1},
+                { "arcsech", 1},
+                { "arccsch", 1},
+
+
+                { "log2", 1},
+                { "log10", 1},
+                { "log", 2},
+                { "ln", 1},
+                { "exp", 1},
+
+                { "mod", 2}
             };
 
         }
@@ -173,7 +221,7 @@ namespace Calculator
                                 i -= 1;
                             }
                             components.Insert(i, new OperatorComponent("*"));
-                            components.Insert(i, new DecimalComponent(Decimal.Parse("-1")));
+                            components.Insert(i, new DecimalComponent(Double.Parse("-1")));
                
 
                             printComponents(components, verbose);
@@ -190,7 +238,7 @@ namespace Calculator
             {
                 end++;
             }
-            decimal n = Decimal.Parse(expression[start..end]);
+            double n = Double.Parse(expression[start..end]);
 
             if (end == expression.Length)
             {
@@ -267,7 +315,7 @@ namespace Calculator
             return (new BracketComponent(bracket), end, nextType);
         }
 
-        public (List<decimal>, int end) GetArgs(string expression, int start)
+        public (List<double>, int end) GetArgs(string expression, int start)
         {
             int nOpeningBrackets = 0;
             int nClosingBrackets = 0;
@@ -311,12 +359,12 @@ namespace Calculator
 
             stringArgs.Add(expression[argstart..end]);
 
-            List<Decimal> args = new List<Decimal>();
+            List<double> args = new List<double>();
 
             for (int i = 0; i < stringArgs.Count; i++)
             {
                 string stringArg = stringArgs[i];
-                decimal arg = Evaluate(stringArg);
+                double arg = Evaluate(stringArg);
                 args.Add(arg);
             }
 
@@ -329,7 +377,7 @@ namespace Calculator
 
             string constant = expression[start..end];
 
-            DecimalComponent dc = new DecimalComponent((decimal)constantsMap[constant]);
+            DecimalComponent dc = new DecimalComponent(constantsMap[constant]);
 
             if (end == expression.Length)
             {
@@ -359,13 +407,12 @@ namespace Calculator
                 {
                     break;
                 }
-                Console.WriteLine(end + "fsfd" + start);
                 end++;
 
             }
             string sf = expression[start..end];
 
-            (List<decimal> args, end) = GetArgs(expression, end);
+            (List<double> args, end) = GetArgs(expression, end);
 
             SpecialFunctionComponent sfc = new SpecialFunctionComponent(sf, args);
 
@@ -506,9 +553,9 @@ namespace Calculator
 
         private DecimalComponent EvaluateOperator(DecimalComponent left, DecimalComponent right, OperatorComponent op)
         {
-            decimal result;
-            decimal leftDecimal = left.n;
-            decimal rightDecimal = right.n;
+            double result;
+            double leftDecimal = left.n;
+            double rightDecimal = right.n;
 
             if (op.operatorString == "+")
             {
@@ -527,7 +574,7 @@ namespace Calculator
             }
             else if (op.operatorString == "^")
             {
-                result = (decimal) Math.Pow((double)leftDecimal, (double)rightDecimal);
+                result = Math.Pow((double)leftDecimal, (double)rightDecimal);
             }
             else { 
                 throw new NotImplementedException();
@@ -591,8 +638,9 @@ namespace Calculator
 
         public DecimalComponent EvaluateSpecialFunc(SpecialFunctionComponent spc)
         {
-
-            return new DecimalComponent(specialFunctionMap[spc.specialFunction](spc.args.ToArray()));
+            Func<double[], double> spf = specialFunctionMap[spc.specialFunction];
+            if (spc.args.Count != argumentCountMap[spc.specialFunction]) throw new ArgumentException("invalid arguments", nameof(spc.args));
+            return new DecimalComponent(spf(spc.args.ToArray()));
         }
 
         public void EvaluateSpecialFuncs(ref List<Component> components)
@@ -760,7 +808,7 @@ namespace Calculator
                     {
                         Console.Write(spc.specialFunction);
                         Console.Write("[");
-                        foreach (decimal arg in spc.args)
+                        foreach (double arg in spc.args)
                         {
                             Console.Write(arg.ToString());
                             Console.Write(";");
@@ -774,7 +822,7 @@ namespace Calculator
             Console.WriteLine();
         }
 
-        public decimal Evaluate(string expression, bool verbose = true)
+        public double Evaluate(string expression, bool verbose = true)
         {
             
             expression = expression.Replace(" ", "");
@@ -803,7 +851,7 @@ namespace Calculator
             return result.n;
         }
 
-        public void AppendHistory(decimal dec)
+        public void AppendHistory(double dec)
         {
             history.Add(dec);
         }

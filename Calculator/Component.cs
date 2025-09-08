@@ -19,8 +19,8 @@ namespace Calculator
 
     public class DecimalComponent : Component
     {
-        public decimal n;
-        public DecimalComponent(decimal n)
+        public double n;
+        public DecimalComponent(double n)
         {
             this.n = n;
         }
@@ -75,10 +75,10 @@ namespace Calculator
 
     public class SpecialFunctionComponent : Component {
         public string specialFunction;
-        public List<decimal> args;
+        public List<double> args;
 
 
-        public SpecialFunctionComponent(string specialFunction, List<decimal> args) { 
+        public SpecialFunctionComponent(string specialFunction, List<double> args) { 
             this.specialFunction = specialFunction;
             this.args = args;
         }

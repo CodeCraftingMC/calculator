@@ -105,7 +105,7 @@ namespace Calculator
             try
             {
                 string input = TBInput.Text;
-                decimal result = Parser.Evaluate(input);
+                double result = Parser.Evaluate(input);
                 Parser.AppendHistory(result);
                 RTBHistory.SelectionStart = 0;
                 RTBHistory.SelectionLength = 0;
