@@ -156,6 +156,13 @@
             return (decimal)Math.Sqrt((double)x);
         }
 
+        public static decimal Root(decimal[] args)
+        {
+            decimal x = args[0];
+            decimal _base = args[1];
+            return (decimal)Math.Pow((double) x, 1.0 / (double) _base);
+        }
+
         public static decimal Log2(decimal[] args)
         {
             decimal x = args[0];
@@ -186,6 +193,12 @@
             return (decimal)Math.Exp((double)x);
         }
 
+        public static decimal Mod(decimal[] args)
+        {
+            decimal x = args[0];
+            decimal y = args[1];
+            return x % y;
+        }
 
 
         public static decimal Ans(decimal index, List<decimal> answers)
