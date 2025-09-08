@@ -51,6 +51,7 @@
             TBInput.TabIndex = 0;
             TBInput.Text = "1+2";
             TBInput.TextAlign = HorizontalAlignment.Right;
+            TBInput.KeyDown += TBInput_KeyDown;
             TBInput.Leave += TBInput_Leave;
             // 
             // TLPButtons
