@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Calculator
+﻿namespace Calculator
 {
     public static class MathConstants
     {
@@ -12,7 +6,7 @@ namespace Calculator
         {
             get
             {
-                if(_pi == 0)
+                if (_pi == 0)
                 {
                     if (File.Exists("pi.txt") && double.TryParse(File.ReadAllText("pi.txt"), out double pi))
                     {
