@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculatorWindow));
             TBInput = new TextBox();
             TLPButtons = new TableLayoutPanel();
             LabelPreviousInput = new Label();
@@ -153,6 +154,7 @@
             Controls.Add(LabelPreviousInput);
             Controls.Add(TBInput);
             ForeColor = Color.White;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(6);
             Name = "CalculatorWindow";
             Text = "Calculator";
