@@ -160,7 +160,7 @@
         {
             double x = args[0];
             double _base = args[1];
-            return (double)Math.Pow((double) x, 1.0 / (double) _base);
+            return (double)Math.Pow((double)x, 1.0 / (double)_base);
         }
 
         public static double Log2(double[] args)

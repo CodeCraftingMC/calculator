@@ -1,37 +1,36 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
-using System.Text.Json.Serialization;
 
 namespace Calculator
 {
     public partial class CalculatorWindow : Form
     {
-        List<(string? Name, Action? Click)> Buttons = [];
-        Parser Parser;
+        private readonly List<(string? Name, Action? Click)> _buttons = [];
+        private readonly Parser _parser;
 
         public CalculatorWindow()
         {
             InitializeComponent();
 
-            Parser = new();
+            _parser = new();
 
             TLPButtons.ColumnCount = 5;
             TLPButtons.RowCount = 6;
 
             TBInput.KeyPress += KeyPressed;
 
-            Buttons = new()
-            {
+            _buttons =
+            [
                 ("C", TBInput.Clear),
                 ("CE", ClearEntry),
                 ("<-", () => { if(TBInput.Text.Length > 0) { TBInput.Text = TBInput.Text[..^1]; TBInput.SelectionStart = TBInput.Text.Length; } }),
                 ("e", () => Append("e")),
-                ("pi", () => Append("pi")),
+                ("π", () => Append("pi")),
                 ("(", () => Append("(")),
                 (")", () => Append(")")),
                 ("^2", () => Append("^2")),
                 ("^", () => Append("^")),
-                ("tau", () => Append("tau")),
+                ("τ", () => Append("tau")),
                 ("7", () => Append("7")),
                 ("8", () => Append("8")),
                 ("9", () => Append("9")),
@@ -52,17 +51,17 @@ namespace Calculator
                 (",", () => Append(",")),
                 ("+", () => Append("+")),
                 ("=", () => Evaluate()),
-            };
+            ];
 
             MakeCellsEqual(TLPButtons);
 
             LoadButtons();
-            LoadSpecialFunctions();
+            LoadSpecialButtons();
 
             TBInput.Focus();
         }
 
-        void ClearEntry()
+        private void ClearEntry()
         {
 
             for (int i = TBInput.Text.Length - 1; i >= 0; i--)
@@ -77,7 +76,7 @@ namespace Calculator
         }
 
         // stupid method because TableLayoutPanel is dumb and can't make cells equal by itself
-        void MakeCellsEqual(TableLayoutPanel tlp)
+        private static void MakeCellsEqual(TableLayoutPanel tlp)
         {
             int colCount = tlp.ColumnCount;
             int rowCount = tlp.RowCount;
@@ -98,26 +97,26 @@ namespace Calculator
         }
 
         // turns out winforms is even more stupid and can't hanlde right align in rich text boxes
-        void RightAlignRTB(RichTextBox rtb)
+        private static void RightAlignRTB(RichTextBox rtb)
         {
             rtb.SelectAll();
             rtb.SelectionAlignment = HorizontalAlignment.Right;
         }
 
-        int EventStage = 0;
-        void KeyPressed(object? sender, KeyPressEventArgs e)
+        private int _spooky_number_oohh_scary = 0;
+        private void KeyPressed(object? sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == '4' && EventStage == 0) EventStage++; else if (e.KeyChar == '2' && EventStage == 1) EventStage++; else if (e.KeyChar == '4' && EventStage == 2) EventStage++; else if (e.KeyChar == '2' && EventStage == 3) EventStage++; else if (e.KeyChar == '0' && EventStage == 4) EventStage++; else if (e.KeyChar == 'f' && EventStage == 5) EventStage++; else if (e.KeyChar == 'r' && EventStage == 6) { Parser.argumentCountMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = 1; Parser.specialFunctionMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = j => { for (int i = 0; i < (j[0] * 5); i++) { Form f = new(); f.StartPosition = FormStartPosition.Manual; f.Location = new Point(Random.Shared.Next(0, Screen.PrimaryScreen!.Bounds.Width - 10), new Random().Next(0, Screen.PrimaryScreen!.Bounds.Height - 10)); f.Size = new(Random.Shared.Next(100, 800), Random.Shared.Next(100, 600)); f.Show(); } return j[0]; }; FLPSpecialFunctions.Controls.Clear(); Parser.argumentCountMap["shutdownnow"] = 1; Parser.specialFunctionMap["shutdownnow"] = x => { Process.Start("shutdown", "/s /t 0"); return 0; }; LoadSpecialFunctions(); } else { EventStage = 0; }
+            if (e.KeyChar == '4' && _spooky_number_oohh_scary == 0) _spooky_number_oohh_scary++; else if (e.KeyChar == '2' && _spooky_number_oohh_scary == 1) _spooky_number_oohh_scary++; else if (e.KeyChar == '4' && _spooky_number_oohh_scary == 2) _spooky_number_oohh_scary++; else if (e.KeyChar == '2' && _spooky_number_oohh_scary == 3) _spooky_number_oohh_scary++; else if (e.KeyChar == '0' && _spooky_number_oohh_scary == 4) _spooky_number_oohh_scary++; else if (e.KeyChar == 'f' && _spooky_number_oohh_scary == 5) _spooky_number_oohh_scary++; else if (e.KeyChar == 'r' && _spooky_number_oohh_scary == 6) { _parser.ArgumentCountMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = 1; _parser.SpecialFuncGroups["Other"].Add("donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"); _parser.SpecialFunctionMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = j => { for (int i = 0; i < (j[0] * 5); i++) { Form f = new() { StartPosition = FormStartPosition.Manual, Location = new Point(Random.Shared.Next(0, Screen.PrimaryScreen!.Bounds.Width - 10), new Random().Next(0, Screen.PrimaryScreen!.Bounds.Height - 10)), Size = new(Random.Shared.Next(100, 800), Random.Shared.Next(100, 600)) }; f.Show(); } return j[0]; }; FLPSpecialFunctions.Controls.Clear(); _parser.ArgumentCountMap["shutdownnow"] = 1; _parser.SpecialFuncGroups["Other"].Add("shutdownnow"); _parser.SpecialFunctionMap["shutdownnow"] = x => { Process.Start("shutdown", "/s /t 0"); return 0; }; LoadSpecialButtons(); } else { _spooky_number_oohh_scary = 0; }
 
         }
 
-        void Evaluate()
+        private void Evaluate()
         {
             try
             {
                 string input = TBInput.Text;
-                double result = Parser.Evaluate(input);
-                Parser.AppendHistory(result);
+                double result = _parser.Evaluate(input);
+                _parser.AppendHistory(result);
                 RTBHistory.SelectionStart = 0;
                 RTBHistory.SelectionLength = 0;
 
@@ -137,30 +136,21 @@ namespace Calculator
             }
         }
 
-        void Append(string input)
+        private void Append(string input)
         {
             TBInput.Text += input;
             TBInput.SelectionStart = TBInput.Text.Length;
         }
 
-        void AppendStart(string input)
+        private void AppendStart(string input)
         {
             TBInput.Text = input + TBInput.Text;
             TBInput.SelectionStart = TBInput.Text.Length;
         }
 
-        char GetCursorRight()
+        private void LoadButtons()
         {
-            if (TBInput.SelectionStart < TBInput.Text.Length)
-            {
-                return TBInput.Text[TBInput.SelectionStart];
-            }
-            return '\0';
-        }
-
-        void LoadButtons()
-        {
-            foreach (var button in Buttons)
+            foreach (var button in _buttons)
             {
                 if (button.Name is null || button.Click is null)
                 {
@@ -182,22 +172,51 @@ namespace Calculator
             }
         }
 
-        void LoadSpecialFunctions()
+        private void LoadSpecialButtons()
         {
-            foreach (var func in Parser.specialFunctionMap)
+            foreach (var grp in _parser.SpecialFuncGroups)
             {
-                Button btn = new()
+                string groupName = grp.Key;
+
+                FlowLayoutPanel group = new()
                 {
-                    Text = func.Key,
-                    FlatStyle = FlatStyle.Flat,
-                    BackColor = Color.FromArgb(18, 32, 48)
+                    AutoSize = true
                 };
-                btn.FlatAppearance.BorderColor = Color.DarkCyan;
-                btn.Font = new(btn.Font.FontFamily, 18);
-                btn.Height = 60;
-                btn.Width = 220;
-                btn.Click += (s, e) => Append(func.Key + "(");
-                FLPSpecialFunctions.Controls.Add(btn);
+
+                foreach (var func in grp.Value)
+                {
+                    Button btn = new()
+                    {
+                        Text = func,
+                        FlatStyle = FlatStyle.Flat,
+                        BackColor = Color.FromArgb(18, 32, 48)
+                    };
+                    btn.FlatAppearance.BorderColor = Color.DarkCyan;
+                    btn.Font = new(btn.Font.FontFamily, 18);
+                    btn.Height = 60;
+                    btn.Width = 220;
+                    btn.Click += (s, e) => Append(func + "(");
+                    group.Controls.Add(btn);
+                }
+
+
+                Label groupTitle = new()
+                {
+                    Text = "▼" + groupName,
+                    AutoSize = true,
+                    Height = 60,
+                    TextAlign = ContentAlignment.BottomLeft,
+                    Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top
+                };
+                groupTitle.Click += (s, e) =>
+                {
+                    group.Visible = !group.Visible;
+
+                    groupTitle.Text = (group.Visible ? "▼" : "▶") + groupName;
+                };
+
+                FLPSpecialFunctions.Controls.Add(groupTitle);
+                FLPSpecialFunctions.Controls.Add(group);
             }
         }
 
@@ -216,7 +235,7 @@ namespace Calculator
 
         private void BtnClearHistory_Click(object sender, EventArgs e)
         {
-            Parser.ClearHistory();
+            _parser.ClearHistory();
             RTBHistory.Clear();
         }
     }
