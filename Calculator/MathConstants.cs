@@ -41,5 +41,25 @@
             }
         }
         private static double _e;
+
+        public static double GoldenRatio
+        {
+            get
+            {
+                if (_goldenRatio == 0)
+                {
+                    if (File.Exists("goldenratio.txt") && double.TryParse(File.ReadAllText("goldenratio.txt"), out double goldenRatio))
+                    {
+                        _goldenRatio = goldenRatio;
+                    }
+                    else
+                    {
+                        _goldenRatio = double.E;
+                    }
+                }
+                return _goldenRatio;
+            }
+        }
+        private static double _goldenRatio;
     }
 }

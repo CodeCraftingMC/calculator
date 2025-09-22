@@ -88,6 +88,7 @@
                 {"pi", MathConstants.PI},
                 {"e", MathConstants.E},
                 {"tau", MathConstants.PI * 2},
+                {"gr", MathConstants.GoldenRatio},
                 {"inf", double.PositiveInfinity},
             };
 
