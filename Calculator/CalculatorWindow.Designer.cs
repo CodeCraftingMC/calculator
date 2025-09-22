@@ -157,7 +157,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(6);
             Name = "CalculatorWindow";
-            Text = "Calculator";
+            Text = "Calcflex";
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
