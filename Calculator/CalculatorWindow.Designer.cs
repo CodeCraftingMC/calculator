@@ -103,11 +103,13 @@
             // 
             FLPSpecialFunctions.AutoScroll = true;
             FLPSpecialFunctions.Dock = DockStyle.Fill;
+            FLPSpecialFunctions.FlowDirection = FlowDirection.TopDown;
             FLPSpecialFunctions.Location = new Point(6, 6);
             FLPSpecialFunctions.Margin = new Padding(6);
             FLPSpecialFunctions.Name = "FLPSpecialFunctions";
             FLPSpecialFunctions.Size = new Size(716, 789);
             FLPSpecialFunctions.TabIndex = 4;
+            FLPSpecialFunctions.WrapContents = false;
             // 
             // tableLayoutPanel1
             // 

@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Calculator
+﻿namespace Calculator
 {
-
     public enum BracketType
     {
         OPENING,
@@ -19,50 +12,51 @@ namespace Calculator
 
     public class DecimalComponent : Component
     {
-        public double n;
+        public double N { get; set; }
         public DecimalComponent(double n)
         {
-            this.n = n;
+            N = n;
         }
     }
 
     public class OperatorComponent : Component
     {
-        public string operatorString;
+        public string OperatorString { get; set; }
 
-        public OperatorComponent(string operatorChar) { 
-            this.operatorString = operatorChar;
+        public OperatorComponent(string operatorChar)
+        {
+            OperatorString = operatorChar;
         }
 
         public void RemoveLast()
         {
-            operatorString = operatorString.Substring(0, operatorString.Length - 1);
+            OperatorString = OperatorString.Substring(0, OperatorString.Length - 1);
         }
     }
 
     public class BracketComponent : Component
     {
-        public BracketType type; // true = (, false = )
+        public BracketType Type { get; set; }
         public BracketComponent(BracketType type)
         {
-            this.type = type;
+            Type = type;
         }
 
         public BracketComponent(string bracket)
         {
             if (bracket == "(")
             {
-                type = BracketType.OPENING;
+                Type = BracketType.OPENING;
             }
             else
             {
-                type = BracketType.CLOSING;
+                Type = BracketType.CLOSING;
             }
         }
 
-        public string toString()
+        public override string ToString()
         {
-            if (type == BracketType.OPENING)
+            if (Type == BracketType.OPENING)
             {
                 return "(";
             }
@@ -73,14 +67,16 @@ namespace Calculator
         }
     }
 
-    public class SpecialFunctionComponent : Component {
-        public string specialFunction;
-        public List<double> args;
+    public class SpecialFunctionComponent : Component
+    {
+        public string SpecialFunction { get; set; }
+        public List<double> Args { get; set; }
 
 
-        public SpecialFunctionComponent(string specialFunction, List<double> args) { 
-            this.specialFunction = specialFunction;
-            this.args = args;
+        public SpecialFunctionComponent(string specialFunction, List<double> args)
+        {
+            SpecialFunction = specialFunction;
+            Args = args;
         }
     }
 }
