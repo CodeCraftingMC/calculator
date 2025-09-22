@@ -32,7 +32,7 @@ namespace Calculator
         public Dictionary<string, double> constantsMap;
         public Dictionary<string, int> argumentCountMap;
 
-        Dictionary<string, List<string>> specialFuncGroups = new();
+        public Dictionary<string, List<string>> specialFuncGroups = new();
 
         public enum ComponentType // component types
         {
