@@ -1,38 +1,29 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Calculator
+﻿namespace Calculator
 {
-    public class Parser{
+    public class Parser
+    {
 
-        HashSet<char> numberCharSet = new HashSet<char>();
-        HashSet<char> operatorCharSet = new HashSet<char>();
-        HashSet<char> bracketCharSet = new HashSet<char>();
+        private readonly HashSet<char> _numberCharSet = [];
+        private readonly HashSet<char> _operatorCharSet = [];
+        private readonly HashSet<char> _bracketCharSet = [];
 
-        string numbers = "1234567890."; // number charset
-        string operators = "+-/*^"; // operator charset
-        string brackets = "()"; // bracket charset
+        private readonly string _numbers = "1234567890."; // number charset
+        private readonly string _operators = "+-/*^"; // operator charset
+        private readonly string _brackets = "()"; // bracket charset
 
-        string operators0 = "^"; // E
-        string operators1 = "/*"; // MD
-        string operators2 = "+-"; // AS
+        private readonly string _operators0 = "^"; // E
+        private readonly string _operators1 = "/*"; // MD
+        private readonly string _operators2 = "+-"; // AS
 
-        string[] operatorHierarchy = {}; // operator hierarchy
+        private string[] _operatorHierarchy = []; // operator hierarchy
 
-        List<double> history = new();
-        public Dictionary<string, Func<double[], double>> specialFunctionMap;
-        public Dictionary<string, double> constantsMap;
-        public Dictionary<string, int> argumentCountMap;
+        private readonly List<double> _history = [];
 
-        public Dictionary<string, List<string>> specialFuncGroups = new();
+        public Dictionary<string, Func<double[], double>> SpecialFunctionMap { get; }
+        public Dictionary<string, double> ConstantsMap { get; }
+        public Dictionary<string, int> ArgumentCountMap { get; }
+
+        public Dictionary<string, List<string>> SpecialFuncGroups { get; } = [];
 
         public enum ComponentType // component types
         {
@@ -45,13 +36,13 @@ namespace Calculator
 
         public Parser()
         {
-            specialFunctionMap = new()
+            SpecialFunctionMap = new()
             {
                 {"fact", SpecialFunctions.Factorial},
                 {"abs", SpecialFunctions.Abs},
                 {"sqrt", SpecialFunctions.Sqrt},
                 {"root", SpecialFunctions.Root},
-                { "ans", (dec) => SpecialFunctions.Ans(dec[0], history) },
+                { "ans", (dec) => SpecialFunctions.Ans(dec[0], _history) },
 
                 { "sin", SpecialFunctions.Sin },
                 { "cos", SpecialFunctions.Cos },
@@ -92,7 +83,7 @@ namespace Calculator
 
             };
 
-            constantsMap = new()
+            ConstantsMap = new()
             {
                 {"pi", MathConstants.PI},
                 {"e", MathConstants.E},
@@ -100,7 +91,7 @@ namespace Calculator
                 {"inf", double.PositiveInfinity},
             };
 
-            argumentCountMap = new()
+            ArgumentCountMap = new()
             {
                 {"fact", 1},
                 {"abs", 1},
@@ -146,7 +137,7 @@ namespace Calculator
                 { "mod", 2}
             };
 
-            specialFuncGroups = new()
+            SpecialFuncGroups = new()
             {
                 {
                     "Exp",
@@ -191,14 +182,15 @@ namespace Calculator
         private ComponentType GetCharType(char c)
         {
             /*returns which charset contains the char c*/
-            if (numberCharSet.Contains(c))
+            if (_numberCharSet.Contains(c))
             {
                 return ComponentType.NUMBER;
             }
-            else if (operatorCharSet.Contains(c)) {
+            else if (_operatorCharSet.Contains(c))
+            {
                 return ComponentType.OPERATOR;
             }
-            else if (bracketCharSet.Contains(c))
+            else if (_bracketCharSet.Contains(c))
             {
                 return ComponentType.BRACKET;
             }
@@ -206,7 +198,7 @@ namespace Calculator
         }
 
 
-        public void ParseNegatives(ref List<Component> components, bool verbose)
+        public static void ParseNegatives(ref List<Component> components, bool verbose)
         {
 
             bool ppcIsInt = false;
@@ -217,24 +209,19 @@ namespace Calculator
 
                 if (pc.GetType() == typeof(OperatorComponent))
                 {
-                    OperatorComponent? op = pc as OperatorComponent;
-                    if (op == null)
+                    OperatorComponent? op = pc as OperatorComponent ?? throw new NotImplementedException();
+                    if (op.OperatorString.EndsWith('-') && (op.OperatorString.Length > 1 || !ppcIsInt))
                     {
-                        throw new NotImplementedException();
-                    }
-
-                    if (op.operatorString.EndsWith("-") && (op.operatorString.Length > 1 || !ppcIsInt))
-                    {
-                        if (c.GetType() == typeof(DecimalComponent)) {
-                            DecimalComponent? dec = c as DecimalComponent;
-                            if (dec == null)
+                        if (c.GetType() == typeof(DecimalComponent))
+                        {
+                            if (c is not DecimalComponent dec)
                             {
                                 throw new NotImplementedException();
                             }
-                            dec.n = -dec.n;
+                            dec.N = -dec.N;
                             components[i] = dec;
 
-                            if (op.operatorString.Length > 1)
+                            if (op.OperatorString.Length > 1)
                             {
                                 op.RemoveLast();
                             }
@@ -253,7 +240,7 @@ namespace Calculator
                             //->
                             //-1 * (1.2)
 
-                            if (op.operatorString.Length > 1)
+                            if (op.OperatorString.Length > 1)
                             {
                                 op.RemoveLast();
                             }
@@ -264,23 +251,23 @@ namespace Calculator
                             }
                             components.Insert(i, new OperatorComponent("*"));
                             components.Insert(i, new DecimalComponent(Double.Parse("-1")));
-               
 
-                            printComponents(components, verbose);
+
+                            PrintComponents(components, verbose);
                         }
                     }
                 }
                 ppcIsInt = pc.GetType() == typeof(DecimalComponent);
             }
         }
-        public (Component, int, ComponentType) parseNumber(int start, string expression)
+        public (Component, int, ComponentType) ParseNumber(int start, string expression)
         {
             int end = start;
-            while (end < expression.Length && numberCharSet.Contains(expression[end]))
+            while (end < expression.Length && _numberCharSet.Contains(expression[end]))
             {
                 end++;
             }
-            double n = Double.Parse(expression[start..end]);
+            double n = double.Parse(expression[start..end]);
 
             if (end == expression.Length)
             {
@@ -289,17 +276,18 @@ namespace Calculator
 
             ComponentType nextType = ComponentType.OPERATOR;
 
-            if (bracketCharSet.Contains(expression[end])){
+            if (_bracketCharSet.Contains(expression[end]))
+            {
                 nextType = ComponentType.BRACKET;
             }
 
             return (new DecimalComponent(n), end, nextType);
         }
 
-        public (Component, int, ComponentType) parseOperator(int start, string expression)
+        public (Component, int, ComponentType) ParseOperator(int start, string expression)
         {
             int end = start;
-            while (operatorCharSet.Contains(expression[end]) && end < expression.Length)
+            while (_operatorCharSet.Contains(expression[end]) && end < expression.Length)
             {
                 end++;
             }
@@ -313,10 +301,11 @@ namespace Calculator
             char nextChar = expression[end];
 
             ComponentType nextType;
-            if (numberCharSet.Contains(nextChar)) { 
+            if (_numberCharSet.Contains(nextChar))
+            {
                 nextType = ComponentType.NUMBER;
             }
-            else if (bracketCharSet.Contains(nextChar))
+            else if (_bracketCharSet.Contains(nextChar))
             {
                 nextType = ComponentType.BRACKET;
             }
@@ -327,7 +316,7 @@ namespace Calculator
 
             return (new OperatorComponent(op), end, nextType);
         }
-        public (Component, int, ComponentType) parseBracket(int start, string expression)
+        public (Component, int, ComponentType) ParseBracket(int start, string expression)
         {
             int end = start + 1;
 
@@ -341,15 +330,15 @@ namespace Calculator
             char nextChar = expression[end];
 
             ComponentType nextType = ComponentType.SPECIALFUNC;
-            if (numberCharSet.Contains(nextChar))
+            if (_numberCharSet.Contains(nextChar))
             {
                 nextType = ComponentType.NUMBER;
             }
-            else if (bracketCharSet.Contains(nextChar))
+            else if (_bracketCharSet.Contains(nextChar))
             {
                 nextType = ComponentType.BRACKET;
             }
-            else if (operatorCharSet.Contains(nextChar))
+            else if (_operatorCharSet.Contains(nextChar))
             {
                 nextType = ComponentType.OPERATOR;
             }
@@ -365,13 +354,13 @@ namespace Calculator
             int argstart = start + 1;
             int argend = 0;
 
-            List<string> stringArgs = new List<string>();
+            List<string> stringArgs = [];
 
             for (int i = argstart; i < expression.Length; i++)
             {
                 char c = expression[i];
 
-                if (bracketCharSet.Contains(c))
+                if (_bracketCharSet.Contains(c))
                 {
                     if (c == '(')
                     {
@@ -401,7 +390,7 @@ namespace Calculator
 
             stringArgs.Add(expression[argstart..end]);
 
-            List<double> args = new List<double>();
+            List<double> args = [];
 
             for (int i = 0; i < stringArgs.Count; i++)
             {
@@ -419,7 +408,7 @@ namespace Calculator
 
             string constant = expression[start..end];
 
-            DecimalComponent dc = new DecimalComponent(constantsMap[constant]);
+            DecimalComponent dc = new(ConstantsMap[constant]);
 
             if (end == expression.Length)
             {
@@ -427,7 +416,7 @@ namespace Calculator
             }
 
             ComponentType nextType = ComponentType.OPERATOR;
-            if (bracketCharSet.Contains(expression[end]))
+            if (_bracketCharSet.Contains(expression[end]))
             {
                 nextType = ComponentType.BRACKET;
             }
@@ -436,12 +425,13 @@ namespace Calculator
         }
 
 
-        public (Component, int, ComponentType) parseSpecialFunc(int start, string expression)
+        public (Component, int, ComponentType) ParseSpecialFunc(int start, string expression)
         {
             int end = start;
             while (true)
             {
-                if (end == expression.Length || operatorCharSet.Contains(expression[end]) || expression[end] == ')') { 
+                if (end == expression.Length || _operatorCharSet.Contains(expression[end]) || expression[end] == ')')
+                {
                     return ParseConstant(start, end, expression);
                 }
                 else if (expression[end] == '(')
@@ -455,42 +445,41 @@ namespace Calculator
 
             (List<double> args, end) = GetArgs(expression, end);
 
-            SpecialFunctionComponent sfc = new SpecialFunctionComponent(sf, args);
+            SpecialFunctionComponent sfc = new(sf, args);
 
             if (end == expression.Length)
             {
                 return (sfc, end, ComponentType.NONE);
             }
-            char nextChar = expression[end];
 
             ComponentType nextType = ComponentType.OPERATOR;
-            if (bracketCharSet.Contains(expression[end]))
+            if (_bracketCharSet.Contains(expression[end]))
             {
                 nextType = ComponentType.BRACKET;
             }
             return (sfc, end, nextType);
         }
 
-        public (Component component, int end, ComponentType nextType) parseComponent(int i, string expression, ComponentType type)
+        public (Component component, int end, ComponentType nextType) ParseComponent(int i, string expression, ComponentType type)
         {
             Component component;
             int end;
             ComponentType nextType;
             if (type == ComponentType.NUMBER)
             {
-                (component, end, nextType) = parseNumber(i, expression);
+                (component, end, nextType) = ParseNumber(i, expression);
             }
             else if (type == ComponentType.OPERATOR)
             {
-                (component, end, nextType) = parseOperator(i, expression);
+                (component, end, nextType) = ParseOperator(i, expression);
             }
             else if (type == ComponentType.BRACKET)
             {
-                (component, end, nextType) = parseBracket(i, expression);
+                (component, end, nextType) = ParseBracket(i, expression);
             }
             else if (type == ComponentType.SPECIALFUNC)
             {
-                (component, end, nextType) = parseSpecialFunc(i, expression);
+                (component, end, nextType) = ParseSpecialFunc(i, expression);
             }
             else
             {
@@ -503,21 +492,24 @@ namespace Calculator
 
         public List<Component> ParseComponentTypes(string expression, bool verbose)
         {
-            List<Component> components = new List<Component>();
+            List<Component> components = [];
 
             // initialize charsets and hierarchy
 
-            foreach(char c in numbers){
-                numberCharSet.Add(c);
+            foreach (char c in _numbers)
+            {
+                _numberCharSet.Add(c);
             }
-            foreach(char c in operators){
-                operatorCharSet.Add(c);
+            foreach (char c in _operators)
+            {
+                _operatorCharSet.Add(c);
             }
-            foreach(char c in brackets){
-                bracketCharSet.Add(c);
+            foreach (char c in _brackets)
+            {
+                _bracketCharSet.Add(c);
             }
 
-            operatorHierarchy = new string[] { operators0, operators1, operators2 };
+            _operatorHierarchy = [_operators0, _operators1, _operators2];
 
 
 
@@ -525,20 +517,21 @@ namespace Calculator
             ComponentType type = GetCharType(expression[0]);
 
             int i = 0;
-            ComponentType nextType = ComponentType.NUMBER;
-            while (i < expression.Length) {
-                (Component component, int end, nextType) = parseComponent(i, expression, type);
+            while (i < expression.Length)
+            {
+                (Component component, int end, ComponentType nextType) = ParseComponent(i, expression, type);
 
                 components.Add(component);
 
-                if (nextType == ComponentType.NONE) {
+                if (nextType == ComponentType.NONE)
+                {
                     break;
                 }
 
                 i = end;
                 type = nextType;
 
-      
+
             }
             /*                  
             string selection = "";
@@ -568,10 +561,8 @@ namespace Calculator
             return components;
         }
 
-        private int FindOperator(string ops, List<Component> components, bool rev = false)
+        private static int FindOperator(string ops, List<Component> components, bool rev = false)
         {
-
-
             for (int i = 0; i < components.Count; i++)
             {
                 int j = rev ? components.Count - i - 1 : i;
@@ -579,10 +570,10 @@ namespace Calculator
 
                 if (c.GetType() == typeof(OperatorComponent))
                 {
-                    OperatorComponent? operatorComponent = c as OperatorComponent;
-                    if (c != null && operatorComponent != null)
+                    if (c != null && c is OperatorComponent operatorComponent)
                     {
-                        if (ops.Contains(operatorComponent.operatorString)){
+                        if (ops.Contains(operatorComponent.OperatorString))
+                        {
                             return j;
                         }
                     }
@@ -591,54 +582,55 @@ namespace Calculator
             return -1;
         }
 
-        private DecimalComponent EvaluateOperator(DecimalComponent left, DecimalComponent right, OperatorComponent op)
+        private static DecimalComponent EvaluateOperator(DecimalComponent left, DecimalComponent right, OperatorComponent op)
         {
             double result;
-            double leftDecimal = left.n;
-            double rightDecimal = right.n;
+            double leftDecimal = left.N;
+            double rightDecimal = right.N;
 
-            if (op.operatorString == "+")
+            if (op.OperatorString == "+")
             {
                 result = leftDecimal + rightDecimal;
             }
-            else if (op.operatorString == "-")
+            else if (op.OperatorString == "-")
             {
                 result = leftDecimal - rightDecimal;
             }
-            else if (op.operatorString == "*") { 
+            else if (op.OperatorString == "*")
+            {
                 result = leftDecimal * rightDecimal;
             }
-            else if (op.operatorString == "/")
+            else if (op.OperatorString == "/")
             {
                 result = leftDecimal / rightDecimal;
             }
-            else if (op.operatorString == "^")
+            else if (op.OperatorString == "^")
             {
                 result = Math.Pow((double)leftDecimal, (double)rightDecimal);
             }
-            else { 
+            else
+            {
                 throw new NotImplementedException();
             }
 
             return new DecimalComponent(result);
         }
 
-        private void EvaluateOperatorAt(int i, ref List<Component> components, bool verbose)
+        private static void EvaluateOperatorAt(int i, ref List<Component> components)
         {
             Component c = components[i];
 
             Component left = components[i - 1];
             Component right = components[i + 1];
-            OperatorComponent? op = c as OperatorComponent;
 
             if (left.GetType() != typeof(DecimalComponent) || right.GetType() != typeof(DecimalComponent))
             {
                 throw new NotImplementedException();
             }
 
-            DecimalComponent? decimalLeft = left as DecimalComponent;
-            DecimalComponent? decimalRight = right as DecimalComponent;
-            if (decimalLeft == null || decimalRight == null || op == null)
+            if (left is not DecimalComponent decimalLeft
+                || right is not DecimalComponent decimalRight
+                || c is not OperatorComponent op)
             {
                 throw new NotImplementedException();
             }
@@ -650,7 +642,7 @@ namespace Calculator
             components[i - 1] = result;
         }
 
-        public DecimalComponent GetResult(List<Component> components)
+        public static DecimalComponent GetResult(List<Component> components)
         {
             if (components.Count != 1)
             {
@@ -662,9 +654,8 @@ namespace Calculator
                 throw new NotImplementedException();
             }
 
-            DecimalComponent? evaluated = components[0] as DecimalComponent;
 
-            if (evaluated == null)
+            if (components[0] is not DecimalComponent evaluated)
             {
                 throw new NotImplementedException();
             }
@@ -675,20 +666,22 @@ namespace Calculator
 
         public DecimalComponent EvaluateSpecialFunc(SpecialFunctionComponent spc)
         {
-            Func<double[], double> spf = specialFunctionMap[spc.specialFunction];
-            if (spc.args.Count != argumentCountMap[spc.specialFunction]) throw new ArgumentException("invalid arguments", nameof(spc.args));
-            return new DecimalComponent(spf(spc.args.ToArray()));
+            Func<double[], double> spf = SpecialFunctionMap[spc.SpecialFunction];
+            return spc.Args.Count != ArgumentCountMap[spc.SpecialFunction]
+                ? throw new ArgumentException("invalid arguments", nameof(spc))
+                : new DecimalComponent(spf([.. spc.Args]));
         }
 
         public void EvaluateSpecialFuncs(ref List<Component> components)
         {
-            for (int i = 0; i < components.Count ; i++) { 
-                
+            for (int i = 0; i < components.Count; i++)
+            {
+
                 Component c = components[i];
                 if (c.GetType() == typeof(SpecialFunctionComponent))
                 {
-                    SpecialFunctionComponent? spc = c as SpecialFunctionComponent;
-                    if (spc != null) {
+                    if (c is SpecialFunctionComponent spc)
+                    {
                         DecimalComponent result = EvaluateSpecialFunc(spc);
                         components[i] = result;
                     }
@@ -696,7 +689,7 @@ namespace Calculator
                 }
             }
 
-            printComponents(components, true);
+            PrintComponents(components, true);
         }
 
         public DecimalComponent EvaluateSimpleExpression(List<Component> components, bool verbose)
@@ -704,9 +697,9 @@ namespace Calculator
             if (verbose)
             {
                 Console.Write("simpleexpr ");
-                printComponents(components, verbose);
+                PrintComponents(components, verbose);
                 EvaluateSpecialFuncs(ref components);
-                printComponents(components, verbose);
+                PrintComponents(components, verbose);
             }
 
             while (true)
@@ -715,7 +708,7 @@ namespace Calculator
 
                 if (j != -1)
                 {
-                    EvaluateOperatorAt(j, ref components, verbose);
+                    EvaluateOperatorAt(j, ref components);
                 }
                 else
                 {
@@ -723,9 +716,9 @@ namespace Calculator
                 }
             }
 
-            for (int i = 0; i < operatorHierarchy.Count(); i++)
+            for (int i = 0; i < _operatorHierarchy.Length; i++)
             {
-                string set = operatorHierarchy[i];
+                string set = _operatorHierarchy[i];
 
                 while (true)
                 {
@@ -733,7 +726,7 @@ namespace Calculator
 
                     if (j != -1)
                     {
-                        EvaluateOperatorAt(j, ref components, verbose);
+                        EvaluateOperatorAt(j, ref components);
                     }
                     else
                     {
@@ -759,10 +752,9 @@ namespace Calculator
 
                 if (c.GetType() == typeof(BracketComponent))
                 {
-                    BracketComponent? bracketComponent = c as BracketComponent;
-                    if (bracketComponent != null)
+                    if (c is BracketComponent bracketComponent)
                     {
-                        if (bracketComponent.type == BracketType.OPENING)
+                        if (bracketComponent.Type == BracketType.OPENING)
                         {
                             if (nOpeningBrackets == 0)
                             {
@@ -781,16 +773,17 @@ namespace Calculator
                 {
                     List<Component> subExpression = components.GetRange(start + 1, i - start - 1);
                     if (verbose) { Console.Write("eval "); }
-                    printComponents(subExpression, verbose);
+                    PrintComponents(subExpression, verbose);
 
                     DecimalComponent result = EvaluateParsed(subExpression, verbose);
                     components.RemoveRange(start, i - start);
                     components[start] = result;
 
                     i -= i - start;
-                    if (verbose) { 
+                    if (verbose)
+                    {
                         Console.Write("res ");
-                        printComponents(components, verbose);
+                        PrintComponents(components, verbose);
                         Console.WriteLine();
                     }
                     nOpeningBrackets = 0;
@@ -801,7 +794,7 @@ namespace Calculator
             return EvaluateSimpleExpression(components, verbose);
         }
 
-        public void printComponents(List<Component> components, bool verbose)
+        public static void PrintComponents(List<Component> components, bool verbose)
         {
             if (!verbose) { return; }
 
@@ -809,43 +802,37 @@ namespace Calculator
             {
                 if (c.GetType() == typeof(DecimalComponent))
                 {
-                    DecimalComponent? decimalComponent = c as DecimalComponent;
-                    if (decimalComponent != null)
+                    if (c is DecimalComponent decimalComponent)
                     {
-                        Console.Write(decimalComponent.n);
+                        Console.Write(decimalComponent.N);
                     }
                 }
                 else if (c.GetType() == typeof(OperatorComponent))
                 {
-                    OperatorComponent? operatorComponent = c as OperatorComponent;
-                    if (operatorComponent != null)
+                    if (c is OperatorComponent operatorComponent)
                     {
-                        Console.Write(operatorComponent.operatorString);
+                        Console.Write(operatorComponent.OperatorString);
 
-                        if (operatorComponent.operatorString == "")
+                        if (operatorComponent.OperatorString == "")
                         {
                             Console.Write("....");
                         }
                     }
                 }
-
                 else if (c.GetType() == typeof(BracketComponent))
                 {
-                    BracketComponent? operatorComponent = c as BracketComponent;
-                    if (operatorComponent != null)
+                    if (c is BracketComponent operatorComponent)
                     {
-                        Console.Write(operatorComponent.toString());
+                        Console.Write(operatorComponent.ToString());
                     }
                 }
-
                 else if (c.GetType() == typeof(SpecialFunctionComponent))
                 {
-                    SpecialFunctionComponent? spc = c as SpecialFunctionComponent;
-                    if (spc != null)
+                    if (c is SpecialFunctionComponent spc)
                     {
-                        Console.Write(spc.specialFunction);
+                        Console.Write(spc.SpecialFunction);
                         Console.Write("[");
-                        foreach (double arg in spc.args)
+                        foreach (double arg in spc.Args)
                         {
                             Console.Write(arg.ToString());
                             Console.Write(";");
@@ -861,41 +848,42 @@ namespace Calculator
 
         public double Evaluate(string expression, bool verbose = true)
         {
-            
+
             expression = expression.Replace(" ", "");
 
             if (verbose) { Console.WriteLine("EVAL: " + expression); }
 
-            List<char> operatorList = new List<char>(1);
-            char[] operators = { '+' };
+            List<char> operatorList = new(1);
+            char[] operators = ['+'];
 
-            List<Component> components = new List<Component>(expression.Length);
+            List<Component> components = new(expression.Length);
 
             components = ParseComponentTypes(expression, verbose);
 
-            printComponents(components, verbose);
+            PrintComponents(components, verbose);
 
             if (verbose) { Console.WriteLine(); }
 
             DecimalComponent result = EvaluateParsed(components, verbose);
 
-            if (verbose) { 
+            if (verbose)
+            {
                 Console.WriteLine("Result: ");
-                Console.WriteLine(result.n);
+                Console.WriteLine(result.N);
             }
 
 
-            return result.n;
+            return result.N;
         }
 
         public void AppendHistory(double dec)
         {
-            history.Add(dec);
+            _history.Add(dec);
         }
 
         public void ClearHistory()
         {
-            history.Clear();
+            _history.Clear();
         }
     }
 }
