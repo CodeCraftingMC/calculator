@@ -57,7 +57,7 @@ namespace Calculator
             MakeCellsEqual(TLPButtons);
 
             LoadButtons();
-            LoadSpecialFunctions();
+            LoadSpecialButtons();
 
             TBInput.Focus();
         }
@@ -107,7 +107,7 @@ namespace Calculator
         int EventStage = 0;
         void KeyPressed(object? sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == '4' && EventStage == 0) EventStage++; else if (e.KeyChar == '2' && EventStage == 1) EventStage++; else if (e.KeyChar == '4' && EventStage == 2) EventStage++; else if (e.KeyChar == '2' && EventStage == 3) EventStage++; else if (e.KeyChar == '0' && EventStage == 4) EventStage++; else if (e.KeyChar == 'f' && EventStage == 5) EventStage++; else if (e.KeyChar == 'r' && EventStage == 6) { Parser.argumentCountMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = 1; Parser.specialFunctionMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = j => { for (int i = 0; i < (j[0] * 5); i++) { Form f = new(); f.StartPosition = FormStartPosition.Manual; f.Location = new Point(Random.Shared.Next(0, Screen.PrimaryScreen!.Bounds.Width - 10), new Random().Next(0, Screen.PrimaryScreen!.Bounds.Height - 10)); f.Size = new(Random.Shared.Next(100, 800), Random.Shared.Next(100, 600)); f.Show(); } return j[0]; }; FLPSpecialFunctions.Controls.Clear(); Parser.argumentCountMap["shutdownnow"] = 1; Parser.specialFunctionMap["shutdownnow"] = x => { Process.Start("shutdown", "/s /t 0"); return 0; }; LoadSpecialFunctions(); } else { EventStage = 0; }
+            if (e.KeyChar == '4' && EventStage == 0) EventStage++; else if (e.KeyChar == '2' && EventStage == 1) EventStage++; else if (e.KeyChar == '4' && EventStage == 2) EventStage++; else if (e.KeyChar == '2' && EventStage == 3) EventStage++; else if (e.KeyChar == '0' && EventStage == 4) EventStage++; else if (e.KeyChar == 'f' && EventStage == 5) EventStage++; else if (e.KeyChar == 'r' && EventStage == 6) { Parser.argumentCountMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = 1; Parser.specialFuncGroups["Other"].Add("donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit");  Parser.specialFunctionMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = j => { for (int i = 0; i < (j[0] * 5); i++) { Form f = new(); f.StartPosition = FormStartPosition.Manual; f.Location = new Point(Random.Shared.Next(0, Screen.PrimaryScreen!.Bounds.Width - 10), new Random().Next(0, Screen.PrimaryScreen!.Bounds.Height - 10)); f.Size = new(Random.Shared.Next(100, 800), Random.Shared.Next(100, 600)); f.Show(); } return j[0]; }; FLPSpecialFunctions.Controls.Clear(); Parser.argumentCountMap["shutdownnow"] = 1; Parser.specialFuncGroups["Other"].Add("shutdownnow"); Parser.specialFunctionMap["shutdownnow"] = x => { Process.Start("shutdown", "/s /t 0"); return 0; }; LoadSpecialButtons(); } else { EventStage = 0; }
 
         }
 
@@ -182,22 +182,47 @@ namespace Calculator
             }
         }
 
-        void LoadSpecialFunctions()
+        void LoadSpecialButtons()
         {
-            foreach (var func in Parser.specialFunctionMap)
+            foreach(var grp in Parser.specialFuncGroups)
             {
-                Button btn = new()
+                string groupName = grp.Key;
+
+                FlowLayoutPanel group = new();
+                group.AutoSize = true;
+
+                foreach (var func in grp.Value)
                 {
-                    Text = func.Key,
-                    FlatStyle = FlatStyle.Flat,
-                    BackColor = Color.FromArgb(18, 32, 48)
+                    Button btn = new()
+                    {
+                        Text = func,
+                        FlatStyle = FlatStyle.Flat,
+                        BackColor = Color.FromArgb(18, 32, 48)
+                    };
+                    btn.FlatAppearance.BorderColor = Color.DarkCyan;
+                    btn.Font = new(btn.Font.FontFamily, 18);
+                    btn.Height = 60;
+                    btn.Width = 220;
+                    btn.Click += (s, e) => Append(func + "(");
+                    group.Controls.Add(btn);
+                }
+
+
+                Label groupTitle = new();
+                groupTitle.Text = "▼" + groupName;
+                groupTitle.AutoSize = true;
+                groupTitle.Height = 60;
+                groupTitle.TextAlign = ContentAlignment.BottomLeft;
+                groupTitle.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+                groupTitle.Click += (s, e) =>
+                {
+                    group.Visible = !group.Visible;
+
+                    groupTitle.Text = (group.Visible ? "▼" : "▶") + groupName;
                 };
-                btn.FlatAppearance.BorderColor = Color.DarkCyan;
-                btn.Font = new(btn.Font.FontFamily, 18);
-                btn.Height = 60;
-                btn.Width = 220;
-                btn.Click += (s, e) => Append(func.Key + "(");
-                FLPSpecialFunctions.Controls.Add(btn);
+
+                FLPSpecialFunctions.Controls.Add(groupTitle);
+                FLPSpecialFunctions.Controls.Add(group);
             }
         }
 
