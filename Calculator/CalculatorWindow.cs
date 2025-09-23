@@ -39,7 +39,7 @@ namespace Calculator
                 ("4", () => Append("4")),
                 ("5", () => Append("5")),
                 ("6", () => Append("6")),
-                ("*", () => Append("3")),
+                ("*", () => Append("*")),
                 ("10^x", () => AppendStart("10^(")),
                 ("1", () => Append("1")),
                 ("2", () => Append("2")),
