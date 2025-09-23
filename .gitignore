@@ -54,3 +54,5 @@ TestResult.xml
 nunit-*.xml
 /.vs
 /Calculator/Calculator.csproj.user
+/Inno
+/Res/Icon.blend1
