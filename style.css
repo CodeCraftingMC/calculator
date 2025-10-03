@@ -1,0 +1,99 @@
+body{
+    font-family: 'JetBrains Mono';
+    margin: 0;
+    padding: 0;
+    background-image: linear-gradient(to right, black, #101c33);
+    color: white;
+}
+
+.navbar{
+  display: flex;
+  align-items: right;
+  background-color: #122030;
+  border-bottom: 1px solid darkcyan; 
+}   
+
+.navbar img {
+    height: 50px;
+    padding: 5px 16px;
+}
+
+.navbar a{
+    text-decoration: none;
+    font-size: 20px;
+    padding: 14px 16px;
+    color: white;
+    border: 1px solid transparent;
+}
+
+.navbar a:hover{
+    border: 1px solid #00ffff;
+}
+
+.team-list img {
+    height: 32px;
+    border-radius: 50%;
+    border: 2px darkcyan solid;
+}
+
+.team-list li,
+.team-list li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+h1{
+    color: white;
+    font-size: 56px;
+    font-weight: 500;
+    padding: 30px;
+}
+
+h2{
+    font-size: 27px;
+    font-weight: 500;
+    padding-top: 20px;
+    padding-bottom: 5px;
+    padding-left: 30px;
+}
+
+h3{
+    font-size: 20px;
+    font-weight: 500;
+    padding: 0px 30px;
+}
+
+p{
+    font-size: 18px;
+    font-weight: 500;
+
+    padding-bottom: 5px;
+    padding-left: 30px;
+}
+
+ul li{
+    font-size: 18px;
+    font-weight: 500;
+
+    padding-bottom: 5px;
+    padding-left: 30px;
+}
+
+ul{
+    padding-left: 70px;
+}
+
+a{
+    color: white;
+
+}
+
+.corner-img{
+    position: fixed;
+    bottom: 0;
+    right: 0; 
+    width: 100px;
+    height: auto;
+    z-index: 1000;
+}
