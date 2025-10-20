@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# WFO5001: Der Typ dient nur zu Testzwecken und kann in zukünftigen Aktualisierungen geändert oder entfernt werden. Unterdrücken Sie diese Diagnose, um fortzufahren.
+dotnet_diagnostic.WFO5001.severity = none

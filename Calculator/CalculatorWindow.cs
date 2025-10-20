@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
+using System.Text.Json;
 
 namespace Calculator
 {
@@ -8,11 +9,15 @@ namespace Calculator
         private readonly List<(string? Name, Action? Click)> _buttons = [];
         private readonly Parser _parser;
 
+        private Theme CurrentTheme;
+
         public CalculatorWindow()
         {
             InitializeComponent();
 
             _parser = new();
+
+            AutoScaleMode = AutoScaleMode.None;
 
             TLPButtons.ColumnCount = 5;
             TLPButtons.RowCount = 6;
@@ -59,6 +64,53 @@ namespace Calculator
             LoadSpecialButtons();
 
             TBInput.Focus();
+
+            if(!File.Exists("Themes/default.json"))
+            {
+                Directory.CreateDirectory("Themes");
+                File.WriteAllText("Themes/default.json", JsonSerializer.Serialize(new Theme()
+                {
+                    AccentColor = Color.DarkCyan,
+                    PrimaryBackground = Color.FromArgb(18, 18, 18),
+                    SecondaryBackground = Color.FromArgb(18, 32, 48),
+                    FontColor = Color.White,
+                    IsDarkMode = true
+                }));
+            }
+
+            CurrentTheme = JsonSerializer.Deserialize<Theme>(File.ReadAllText("Themes/default.json"))!;
+
+            LoadTheme(CurrentTheme);
+        }
+
+        public void LoadTheme(Theme theme)
+        {
+            Application.SetColorMode(theme.IsDarkMode ? SystemColorMode.Dark : SystemColorMode.Classic);
+            CurrentTheme = theme;
+            BackColor = CurrentTheme.PrimaryBackground;
+            TLPButtons.BackColor = CurrentTheme.PrimaryBackground;
+            FLPSpecialFunctions.BackColor = CurrentTheme.PrimaryBackground;
+            foreach(Control child in Controls)
+            {
+                ApplyThemeRecursively(child, CurrentTheme);
+            }
+        }
+
+        public void ApplyThemeRecursively(Control control, Theme theme)
+        {
+            if (control is Button btn)
+            {
+                btn.BackColor = CurrentTheme.SecondaryBackground;
+                btn.FlatAppearance.BorderColor = CurrentTheme.AccentColor;
+            }
+            else if(control is TextBox || control is RichTextBox)
+            {
+                control.BackColor = CurrentTheme.SecondaryBackground;
+            }
+            foreach (Control child in control.Controls)
+            {
+                ApplyThemeRecursively(child, theme);
+            }
         }
 
         private void ClearEntry()
