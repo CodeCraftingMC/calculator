@@ -10,6 +10,7 @@ namespace Calculator
         private readonly Parser _parser;
 
         private Theme CurrentTheme;
+        private Config CurrentConfig;
 
         public CalculatorWindow()
         {
@@ -65,32 +66,48 @@ namespace Calculator
 
             TBInput.Focus();
 
-            if(!File.Exists("Themes/default.json"))
+            try
             {
-                Directory.CreateDirectory("Themes");
-                File.WriteAllText("Themes/default.json", JsonSerializer.Serialize(new Theme()
+                if (!File.Exists("Themes/default.json"))
                 {
-                    AccentColor = Color.DarkCyan,
-                    PrimaryBackground = Color.FromArgb(18, 18, 18),
-                    SecondaryBackground = Color.FromArgb(18, 32, 48),
-                    FontColor = Color.White,
-                    IsDarkMode = true
-                }));
+                    Directory.CreateDirectory("Themes");
+                    File.WriteAllText("Themes/default.json", JsonSerializer.Serialize(new Theme()
+                    {
+                        AccentColor = Color.DarkCyan,
+                        PrimaryBackground = Color.FromArgb(18, 18, 18),
+                        SecondaryBackground = Color.FromArgb(18, 32, 48),
+                        FontColor = Color.White,
+                        IsDarkMode = true
+                    }));
+                }
+
+                if (!File.Exists("config.json"))
+                {
+                    File.WriteAllText("config.json", JsonSerializer.Serialize(new Config()));
+                }
+
+                CurrentConfig = JsonSerializer.Deserialize<Config>(File.ReadAllText("config.json"))!;
+                CurrentTheme = JsonSerializer.Deserialize<Theme>(File.ReadAllText(Path.Combine("Themes", CurrentConfig.CurrentTheme + ".json")))!;
+
+                LoadTheme(CurrentTheme);
             }
-
-            CurrentTheme = JsonSerializer.Deserialize<Theme>(File.ReadAllText("Themes/default.json"))!;
-
-            LoadTheme(CurrentTheme);
+            catch
+            {
+                CurrentConfig = new();
+                CurrentTheme = new();
+            }
         }
 
         public void LoadTheme(Theme theme)
         {
             Application.SetColorMode(theme.IsDarkMode ? SystemColorMode.Dark : SystemColorMode.Classic);
+            Font = new Font(theme.FontFamily ?? "Consolas", theme.FontSize);
+            ForeColor = theme.FontColor;
             CurrentTheme = theme;
             BackColor = CurrentTheme.PrimaryBackground;
             TLPButtons.BackColor = CurrentTheme.PrimaryBackground;
             FLPSpecialFunctions.BackColor = CurrentTheme.PrimaryBackground;
-            foreach(Control child in Controls)
+            foreach (Control child in Controls)
             {
                 ApplyThemeRecursively(child, CurrentTheme);
             }
@@ -98,12 +115,14 @@ namespace Calculator
 
         public void ApplyThemeRecursively(Control control, Theme theme)
         {
+            control.Font = new Font(theme.FontFamily ?? "Consolas", theme.FontSize);
+            control.ForeColor = theme.FontColor;
             if (control is Button btn)
             {
                 btn.BackColor = CurrentTheme.SecondaryBackground;
                 btn.FlatAppearance.BorderColor = CurrentTheme.AccentColor;
             }
-            else if(control is TextBox || control is RichTextBox)
+            else if (control is TextBox || control is RichTextBox)
             {
                 control.BackColor = CurrentTheme.SecondaryBackground;
             }
@@ -158,7 +177,58 @@ namespace Calculator
         private int _spooky_number_oohh_scary = 0;
         private void KeyPressed(object? sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == '4' && _spooky_number_oohh_scary == 0) _spooky_number_oohh_scary++; else if (e.KeyChar == '2' && _spooky_number_oohh_scary == 1) _spooky_number_oohh_scary++; else if (e.KeyChar == '4' && _spooky_number_oohh_scary == 2) _spooky_number_oohh_scary++; else if (e.KeyChar == '2' && _spooky_number_oohh_scary == 3) _spooky_number_oohh_scary++; else if (e.KeyChar == '0' && _spooky_number_oohh_scary == 4) _spooky_number_oohh_scary++; else if (e.KeyChar == 'f' && _spooky_number_oohh_scary == 5) _spooky_number_oohh_scary++; else if (e.KeyChar == 'r' && _spooky_number_oohh_scary == 6) { _parser.ArgumentCountMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = 1; _parser.SpecialFuncGroups["Other"].Add("donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"); _parser.SpecialFunctionMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = j => { for (int i = 0; i < (j[0] * 5); i++) { Form f = new() { StartPosition = FormStartPosition.Manual, Location = new Point(Random.Shared.Next(0, Screen.PrimaryScreen!.Bounds.Width - 10), new Random().Next(0, Screen.PrimaryScreen!.Bounds.Height - 10)), Size = new(Random.Shared.Next(100, 800), Random.Shared.Next(100, 600)) }; f.Show(); } return j[0]; }; FLPSpecialFunctions.Controls.Clear(); _parser.ArgumentCountMap["shutdownnow"] = 1; _parser.SpecialFuncGroups["Other"].Add("shutdownnow"); _parser.SpecialFunctionMap["shutdownnow"] = x => { Process.Start("shutdown", "/s /t 0"); return 0; }; LoadSpecialButtons(); } else { _spooky_number_oohh_scary = 0; }
+            if (e.KeyChar == '6' && _spooky_number_oohh_scary == 0)
+                _spooky_number_oohh_scary++;
+            else if (e.KeyChar == '7' && _spooky_number_oohh_scary == 1)
+                _spooky_number_oohh_scary++;
+            else if (e.KeyChar == '4' && _spooky_number_oohh_scary == 2)
+                _spooky_number_oohh_scary++;
+            else if (e.KeyChar == '2' && _spooky_number_oohh_scary == 3)
+                _spooky_number_oohh_scary++;
+            else if (e.KeyChar == '0' && _spooky_number_oohh_scary == 4)
+                _spooky_number_oohh_scary++;
+            else if (e.KeyChar == 'f' && _spooky_number_oohh_scary == 5)
+                _spooky_number_oohh_scary++;
+            else if (e.KeyChar == 'r' && _spooky_number_oohh_scary == 6)
+            {
+                FLPSpecialFunctions.Controls.Clear();
+                _parser.ArgumentCountMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = 1;
+                _parser.SpecialFuncGroups["Other"].Add("donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit");
+                _parser.SpecialFunctionMap["donotusethisfunctionitwillhurtyouthisisverydangeroussodontdoit"] = j =>
+                {
+                    for (int i = 0; i < (j[0] * 5); i++)
+                    {
+                        Form f = new()
+                        {
+                            StartPosition = FormStartPosition.Manual,
+                            Location = new Point(Random.Shared.Next(0, Screen.PrimaryScreen!.Bounds.Width - 10), new Random().Next(0, Screen.PrimaryScreen!.Bounds.Height - 10)),
+                            Size = new(Random.Shared.Next(100, 800), Random.Shared.Next(100, 600))
+                        };
+                        f.Show();
+                    }
+                    return j[0];
+                };
+                _parser.ArgumentCountMap["shutdownnow"] = 1;
+                _parser.SpecialFuncGroups["Other"].Add("shutdownnow");
+                _parser.SpecialFunctionMap["shutdownnow"] = x =>
+                {
+                    Process.Start("shutdown", "/s /t 0");
+                    return 0;
+                };
+                _parser.ArgumentCountMap["easterbunny"] = 1;
+                _parser.SpecialFuncGroups["Other"].Add("easterbunny");
+                _parser.SpecialFunctionMap["easterbunny"] = x =>
+                {
+                    LoadTheme(JsonSerializer.Deserialize<Theme>(File.ReadAllText("Themes/easterbunny.json"))!);
+                    return 0;
+                };
+                LoadSpecialButtons();
+                LoadTheme(CurrentTheme);
+            }
+            else
+            {
+                _spooky_number_oohh_scary = 0;
+            }
 
         }
 

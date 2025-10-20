@@ -1,0 +1,9 @@
+﻿{
+  "PrimaryBackground": "#000000FF",
+  "SecondaryBackground": "#141414FF",
+  "AccentColor": "#0096B8FF",
+  "FontColor": "#FFFFFFFF",
+  "FontFamily": null,
+  "FontSize": 12,
+  "IsDarkMode": true
+}

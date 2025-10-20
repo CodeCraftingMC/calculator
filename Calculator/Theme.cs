@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace Calculator
 {
@@ -17,6 +12,8 @@ namespace Calculator
         public Color AccentColor { get; set; }
         [JsonConverter(typeof(ColorJsonConverter))]
         public Color FontColor { get; set; }
+        public float FontSize { get; set; } = 12;
+        public string? FontFamily { get; set; }
         public bool IsDarkMode { get; set; }
     }
 }
