@@ -16,6 +16,8 @@ namespace Calculator
         {
             InitializeComponent();
 
+            Environment.CurrentDirectory = AppContext.BaseDirectory;
+
             _parser = new();
 
             AutoScaleMode = AutoScaleMode.None;
